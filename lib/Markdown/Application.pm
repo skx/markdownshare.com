@@ -16,12 +16,85 @@ use base 'CGI::Application';
 #
 #  Standard modules
 #
+use CGI::Session;
 use HTML::Template;
 use Math::Base36 ':all';
 use Redis;
 use Text::Markdown 'markdown';
 
 
+
+=begin doc
+
+Create our session, and connect to redis.
+
+=end doc
+
+=cut
+
+sub cgiapp_init
+{
+    my $self  = shift;
+    my $query = $self->query();
+
+    #
+    # Open our redis connection.
+    #
+    $self->{ 'redis' } = Redis->new();
+
+    my $cookie_name   = 'CGISESSID';
+    my $cookie_expiry = '+7d';
+    my $sid           = $query->cookie($cookie_name) || undef;
+
+    # session setup
+    my $session =
+      CGI::Session->new( 'driver:redis',
+                         $sid,
+                         {  Redis  => $self->{ 'redis' },
+                            Expire => 60 * 60 * 24
+                         } );
+
+    # assign the session object to a param
+    $self->param( session => $session );
+
+    # send a cookie if needed
+    if ( !defined $sid or $sid ne $session->id )
+    {
+        my $cookie = $query->cookie( -name    => $cookie_name,
+                                     -value   => $session->id,
+                                     -expires => $cookie_expiry,
+                                   );
+        $self->header_props( -cookie => $cookie );
+    }
+
+    binmode STDOUT, ':utf8';
+
+}
+
+=begin doc
+
+Cleanup our session and close our redis connection.
+
+=end doc
+
+=cut
+
+sub teardown
+{
+    my ($self) = shift;
+
+    #
+    #  Flush the sesions
+    #
+    my $session = $self->param('session');
+    $session->flush() if ( defined($session) );
+
+    #
+    #  Disconnect.
+    #
+    my $redis = $self->{ 'redis' };
+    $redis->quit() if ($redis);
+}
 
 
 #
@@ -242,6 +315,14 @@ sub create
     }
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
+        #
+        #  Set the session.
+        #
+        my $session = $self->param('session');
+        if ( $session )
+        {
+            $session->param( "flash", "Here we .." );
+        }
 
         #
         #  Return
@@ -265,6 +346,32 @@ Show the contents of a paste.
 sub view
 {
     my ($self) = (@_);
+
+    #
+    #  Is there a flash message?
+    #
+    my $flash = undef;
+
+    #
+    #  Possibly from the session.
+    #
+    my $session = $self->param('session');
+    if ( $session && $session->param( "flash" ) && length( $session->param( "flash" )) )
+    {
+        # get the flash
+        $flash = $session->param( "flash" );
+
+        # empty?
+        if ( length( $flash ) )
+        {
+            $session->param( "flash", "" );
+        }
+        else
+        {
+            $flash = undef;
+        }
+
+    }
 
     #
     #  Get the ID
@@ -300,6 +407,7 @@ sub view
     # Render.
     #
     $template->param( id => $id );
+    $template->param( flash => $flash ) if ( $flash );
     return ( $template->output() );
 }
 
