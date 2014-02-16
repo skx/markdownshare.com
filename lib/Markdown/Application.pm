@@ -17,6 +17,7 @@ use base 'CGI::Application';
 #  Standard modules
 #
 use CGI::Session;
+use Digest::MD5 qw(md5_hex);
 use HTML::Template;
 use Math::Base36 ':all';
 use Redis;
@@ -47,12 +48,17 @@ sub cgiapp_init
     my $sid           = $query->cookie($cookie_name) || undef;
 
     # session setup
-    my $session =
-      CGI::Session->new( 'driver:redis',
-                         $sid,
-                         {  Redis  => $self->{ 'redis' },
-                            Expire => 60 * 60 * 24
-                         } );
+    my $session = CGI::Session->new( "driver:redis",
+                                     $sid,
+                                     { Redis  => $self->{ 'redis' },
+                                       Expire => 60 * 60 * 24
+                                     } );
+
+    if ( ! $session )
+    {
+        $session = CGI::Session->new( undef,  $sid, {  Directory => '/tmp' } );
+    }
+
 
     # assign the session object to a param
     $self->param( session => $session );
@@ -139,6 +145,7 @@ sub setup
         'index'  => 'index',
         'cheat'  => 'cheat',
         'create' => 'create',
+        'delete' => 'delete',
         'view'   => 'view',
         'raw'    => 'raw',
 
@@ -332,24 +339,68 @@ sub create
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
         #
+        #  Return
+        #
+        my $id = $self->saveMarkdown($txt);
+
+        #
+        #  Create a deletion link.
+        #
+        my $auth = $self->authLink( $id );
+
+        #
         #  Set the session.
         #
         my $session = $self->param('session');
         if ( $session )
         {
-            $session->param( "flash", "Here we .." );
+            $session->param( "flash", $auth );
         }
-
-        #
-        #  Return
-        #
-        my $id = $self->saveMarkdown($txt);
         return ( $self->redirectURL( "/view/" . $id ) );
     }
 
     return ( $template->output() );
 }
 
+
+sub delete
+{
+    my ($self) = (@_);
+    #
+    #  Get the ID
+    #
+    my $cgi = $self->query();
+    my $id  = $cgi->param("id");
+
+    die "Missing ID" unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
+
+    #
+    #  Find the value, and see if it exists
+    #
+    my $redis = Redis->new();
+    my $rid   = $redis->get( "MARKDOWN:KEY:$id" );
+
+    #
+    #  If the value is present
+    #
+    if ( $rid && ( $rid =~ /^([0-9a-z]+)$/i ) )
+    {
+        #
+        #  Delete the key
+        #
+        my $did = decode_base36($rid);
+        $redis->set( "MARKDOWN:$did:TEXT", "" );
+        $redis->del( "MARKDOWN:KEY:$id", "" );
+
+        return ( $self->redirectURL( "/view/" . $rid ) );
+    }
+    else
+    {
+        $self->header_props( -status => 404 );
+        return "Invalid auth-key: $rid";
+    }
+}
 
 =begin doc
 
@@ -511,6 +562,27 @@ sub saveMarkdown
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
 
     return ( encode_base36($id) );
+}
+
+
+sub authLink
+{
+    my( $self, $id ) = ( @_ );
+
+    my $cgi   = $self->query();
+
+    #
+    #  The deletion link is "hash( time, ip, id )";
+    #
+    my $key = time . $cgi->remote_host() . $id ;
+    my $digest = md5_hex($key);
+
+    #
+    # Set the value
+    #
+    my $redis = Redis->new();
+    $redis->set( "MARKDOWN:KEY:$digest", $id );
+    return( $digest );
 }
 
 
