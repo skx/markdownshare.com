@@ -139,6 +139,7 @@ sub setup
         'index'  => 'index',
         'create' => 'create',
         'view'   => 'view',
+        'raw'    => 'raw',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
@@ -410,6 +411,50 @@ sub view
     $template->param( flash => $flash ) if ( $flash );
     return ( $template->output() );
 }
+
+
+
+=begin doc
+
+Show the contents of a paste, as raw markdown.
+
+=end doc
+
+=cut
+
+sub raw
+{
+    my ($self) = (@_);
+
+    #
+    #  Get the ID
+    #
+    my $cgi = $self->query();
+    my $id  = $cgi->param("id");
+
+    die "Missing ID" unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
+
+    #
+    #  Decode and get the text.
+    #
+    my $redis = Redis->new();
+    my $uid   = decode_base36($id);
+    my $text  = $redis->get("MARKDOWN:$uid:TEXT");
+
+    if ( length( $text ) )
+    {
+        $self->header_add( '-type' => 'text/plain' );
+        return( $text );
+    }
+    else
+    {
+        $self->header_props( -status => 404 );
+        return "Not found";
+    }
+
+}
+
 
 
 =begin doc
