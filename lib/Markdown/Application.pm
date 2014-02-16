@@ -229,13 +229,16 @@ sub create
         #
         #  Render the text
         #
-        my $html = render($txt);
+        if ( length( $txt ) )
+        {
+            my $html = render($txt);
 
-        #
-        #  Populate both the text and the HTML
-        #
-        $template->param( html    => $html,
-                          content => $txt, );
+            #
+            #  Populate both the text and the HTML
+            #
+            $template->param( html    => $html,
+                              content => $txt, );
+        }
     }
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
