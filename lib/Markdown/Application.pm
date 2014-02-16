@@ -177,8 +177,33 @@ sub redirectURL
 {
     my ( $self, $url ) = (@_);
 
+    #
+    #  Cookie name & expiry
+    #
+    my $cookie_name   = 'CGISESSID';
+    my $cookie_expiry = '+7d';
+
+    #
+    #  Get the session identifier
+    #
+    my $query   = $self->query();
+    my $session = $self->param('session');
+
+    my $id = "";
+    $id = $session->id() if ($session);
+
+    #
+    #  Create/Get the cookie
+    #
+    my $cookie = $query->cookie( -name    => $cookie_name,
+                                 -value   => $id,
+                                 -expires => $cookie_expiry,
+                               );
+
     $self->header_add( -location => $url,
-                       -status   => "302", );
+                       -status   => "302",
+                       -cookie   => $cookie
+                     );
     $self->header_type('redirect');
     return "";
 
