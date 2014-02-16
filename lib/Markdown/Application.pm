@@ -18,6 +18,7 @@ use base 'CGI::Application';
 #
 use CGI::Session;
 use Digest::MD5 qw(md5_hex);
+use JSON;
 use HTML::Template;
 use Math::Base36 ':all';
 use Redis;
@@ -295,10 +296,19 @@ sub create
                 my $id = $self->saveMarkdown($txt);
 
                 #
+                #  Get the deletion link.
+                #
+                my $auth = $self->authLink( $id );
+
+                my %hash;
+                $hash{"id" } = $id;
+                $hash{"link"} = $cgi->url( -base => 1 ) . "/view/" . $id;
+                $hash{"delete"} = $cgi->url( -base => 1 ) . "/delete/" . $auth ;
+
+                #
                 #  Build up the redirect link.
                 #
-                my $url = $cgi->url( -base => 1 ) . "/view/" . $id;
-                return ("{\"id\":\"$id\",\"link\":\"$url\"}");
+                return to_json(\%hash)
             }
             else
             {
