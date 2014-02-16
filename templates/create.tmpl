@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Markdown Sharing</title>
+  </head>
+  <body>
+    <h2>Markdown Sharing</h2>
+
+
+<!-- tmpl_if name='html' -->
+<h2>Preview</h2>
+<!-- tmpl_var name='html' -->
+<!-- /tmpl_if -->
+
+
+<form action="/cgi-bin/index.cgi" method="get" >
+<textarea rows="40" cols="200" name="text"><!-- tmpl_var name="content" --></textarea>
+<p>
+<input type="hidden" name="mode" value="create">
+<input type="submit" name="submit" value="Preview">
+<input type="submit" name="submit" value="Create">
+</p>
+</form>
+  </body>
+</html>
