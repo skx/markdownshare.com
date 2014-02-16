@@ -37,10 +37,11 @@ sub cgiapp_prerun
 
     # $self->mode_param so we don't have to go back and change this if we
     # ever decide to use something other than rm
-    if ($self->query->url_param($self->mode_param))
+    if ( $self->query->url_param( $self->mode_param ) )
     {
+
         # prerun_mode lets you change CGI::Apps notion of the current runmode
-        $self->prerun_mode($self->query->url_param($self->mode_param));
+        $self->prerun_mode( $self->query->url_param( $self->mode_param ) );
     }
     return;
 }
@@ -73,7 +74,7 @@ sub setup
     #
     #  Start mode + mode name
     #
-    $self->header_add(-charset => 'utf-8');
+    $self->header_add( -charset => 'utf-8' );
     $self->start_mode('index');
     $self->mode_param('mode');
 }
@@ -93,8 +94,7 @@ sub redirectURL
     my ( $self, $url ) = (@_);
 
     $self->header_add( -location => $url,
-                       -status   => "302",
-                     );
+                       -status   => "302", );
     $self->header_type('redirect');
     return "";
 
@@ -166,9 +166,9 @@ sub create
 {
     my ($self) = (@_);
 
-    my $cgi  = $self->query();
-    my $sub  = $cgi->param( "submit" );
-    my $txt  = $cgi->param( "text" ) || "";
+    my $cgi = $self->query();
+    my $sub = $cgi->param("submit");
+    my $txt = $cgi->param("text") || "";
 
 
     #
@@ -178,21 +178,23 @@ sub create
     {
         if ( $accept =~ /application\/json/i )
         {
+
             #
             #  If we have TEXT submitted.
             #
-            if ( $txt )
+            if ($txt)
             {
+
                 #
                 #  Save it.
                 #
-                my $id = $self->saveMarkdown( $txt );
+                my $id = $self->saveMarkdown($txt);
 
                 #
                 #  Build up the redirect link.
                 #
-                my $url = "http://" . $ENV{'SERVER_NAME'} . "/view/" . $id;
-                return( "{\"id\":\"$id\",\"link\":\"$url\"}" );
+                my $url = "http://" . $ENV{ 'SERVER_NAME' } . "/view/" . $id;
+                return ("{\"id\":\"$id\",\"link\":\"$url\"}");
             }
             else
             {
@@ -215,6 +217,7 @@ sub create
     #
     if ( $sub && ( $sub =~ /preview/i ) )
     {
+
         #
         #  Render the text
         #
@@ -223,17 +226,17 @@ sub create
         #
         #  Populate both the text and the HTML
         #
-        $template->param( html => $html,
-                          content => $txt,
-                        );
+        $template->param( html    => $html,
+                          content => $txt, );
     }
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
+
         #
         #  Return
         #
-        my $id = $self->saveMarkdown( $txt );
-        return( $self->redirectURL( "/view/" . $id  ) );
+        my $id = $self->saveMarkdown($txt);
+        return ( $self->redirectURL( "/view/" . $id ) );
     }
 
     return ( $template->output() );
@@ -252,16 +255,16 @@ sub view
 {
     my ($self) = (@_);
 
-    my $cgi  = $self->query();
-    my $id   = $cgi->param( "id" );
-    my $uid  = decode_base36($id);
+    my $cgi = $self->query();
+    my $id  = $cgi->param("id");
+    my $uid = decode_base36($id);
 
     #
     #  Get the ID from Redis.
     #
     my $redis = Redis->new();
-    my $text  = $redis->get( "MARKDOWN:$uid:TEXT" );
-    $text = render( $text );
+    my $text  = $redis->get("MARKDOWN:$uid:TEXT");
+    $text = render($text);
 
     #
     #  Return it
@@ -269,7 +272,7 @@ sub view
     my $template = $self->load_template("view.tmpl");
     $template->param( html => $text, id => $id );
 
-    return( $template->output() );
+    return ( $template->output() );
 }
 
 
@@ -283,8 +286,8 @@ Render the text.
 
 sub render
 {
-    my ( $txt ) = (@_ );
-    return( markdown( $txt ) );
+    my ($txt) = (@_);
+    return ( markdown($txt) );
 }
 
 
@@ -298,20 +301,20 @@ Populate the given text in the next ID.
 
 sub saveMarkdown
 {
-    my( $self, $txt ) = ( @_ );
+    my ( $self, $txt ) = (@_);
 
     #
     #  Create the ID
     #
     my $redis = Redis->new();
-    my $id    = $redis->incr( "MARKDOWN:COUNT" );
+    my $id    = $redis->incr("MARKDOWN:COUNT");
 
     #
     #  Set the text
     #
-    $redis->set( "MARKDOWN:$id:TEXT" , $txt );
+    $redis->set( "MARKDOWN:$id:TEXT", $txt );
 
-    return( encode_base36( $id ) );
+    return ( encode_base36($id) );
 }
 
 
