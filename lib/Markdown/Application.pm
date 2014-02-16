@@ -146,9 +146,17 @@ sub index
     my ($self) = (@_);
 
     #
-    #  Load the default index.
+    #  Prepare
     #
+    my $cgi      = $self->query();
     my $template = $self->load_template("index.tmpl");
+
+    #
+    #  Set the domain
+    #
+    my $url = $cgi->url( -base => 1 );
+    $template->param( domain => $url );
+
     return ( $template->output() );
 }
 
