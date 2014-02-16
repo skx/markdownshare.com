@@ -31,7 +31,7 @@ http://www.steve.org.uk/
 
 =head1 LICENSE
 
-Copyright (c) 2011 by Steve Kemp.  All rights reserved.
+Copyright (c) 2014 by Steve Kemp.  All rights reserved.
 
 =cut
 

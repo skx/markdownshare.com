@@ -1,5 +1,13 @@
 #!/usr/bin/perl -w
 #
+# Simple Markdown-based pastebin service/site.
+#
+# Allows:
+#
+#   * Create.
+#   * Raw-view + Rendered-view.
+#   * Delete.
+#
 # Steve
 # --
 #
