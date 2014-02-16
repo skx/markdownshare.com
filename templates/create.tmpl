@@ -1,6 +1,7 @@
 <html>
   <head>
     <title>Markdown Sharing</title>
+    <link rel="stylesheet" type="text/css" href="/css/c.css" media="screen" />
   </head>
   <body>
     <h2>Markdown Sharing</h2>
@@ -12,7 +13,7 @@
 <!-- /tmpl_if -->
 
 
-<form action="/cgi-bin/index.cgi" method="get" >
+<form action="/cgi-bin/index.cgi" method="POST" >
 <textarea rows="40" cols="200" name="text"><!-- tmpl_var name="content" --></textarea>
 <p>
 <input type="hidden" name="mode" value="create">
