@@ -235,12 +235,6 @@ sub index
     my $cgi      = $self->query();
     my $template = $self->load_template("index.tmpl");
 
-    #
-    #  Set the domain
-    #
-    my $url = $cgi->url( -base => 1 );
-    $template->param( domain => $url );
-
     return ( $template->output() );
 }
 
@@ -276,6 +270,13 @@ sub api
     #
     my $cgi      = $self->query();
     my $template = $self->load_template("api.tmpl");
+
+
+    #
+    #  Set the domain
+    #
+    my $url = $cgi->url( -base => 1 );
+    $template->param( domain => $url );
 
     return ( $template->output() );
 }
