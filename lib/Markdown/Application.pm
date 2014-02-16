@@ -51,13 +51,13 @@ sub cgiapp_init
     # session setup
     my $session = CGI::Session->new( "driver:redis",
                                      $sid,
-                                     { Redis  => $self->{ 'redis' },
-                                       Expire => 60 * 60 * 24
+                                     {  Redis  => $self->{ 'redis' },
+                                        Expire => 60 * 60 * 24
                                      } );
 
-    if ( ! $session )
+    if ( !$session )
     {
-        $session = CGI::Session->new( undef,  $sid, {  Directory => '/tmp' } );
+        $session = CGI::Session->new( undef, $sid, { Directory => '/tmp' } );
     }
 
 
@@ -298,17 +298,19 @@ sub create
                 #
                 #  Get the deletion link.
                 #
-                my $auth = $self->authLink( $id );
+                my $auth = $self->authLink($id);
 
                 my %hash;
-                $hash{"id" } = $id;
-                $hash{"link"} = $cgi->url( -base => 1 ) . "/view/" . $id;
-                $hash{"delete"} = $cgi->url( -base => 1 ) . "/delete/" . $auth ;
+                $hash{ "id" } = $id;
+                $hash{ "link" } = $cgi->url( -base => 1 ) . "/view/" . $id;
+                $hash{ "delete" } =
+                  $cgi->url( -base => 1 ) . "/delete/" . $auth;
 
                 #
                 #  Build up the redirect link.
                 #
-                return to_json(\%hash)
+                return to_json( \%hash
+                              );
             }
             else
             {
@@ -348,6 +350,7 @@ sub create
     }
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
+
         #
         #  Return
         #
@@ -356,13 +359,13 @@ sub create
         #
         #  Create a deletion link.
         #
-        my $auth = $self->authLink( $id );
+        my $auth = $self->authLink($id);
 
         #
         #  Set the session.
         #
         my $session = $self->param('session');
-        if ( $session )
+        if ($session)
         {
             $session->param( "flash", $auth );
         }
@@ -376,6 +379,7 @@ sub create
 sub delete
 {
     my ($self) = (@_);
+
     #
     #  Get the ID
     #
@@ -389,13 +393,14 @@ sub delete
     #  Find the value, and see if it exists
     #
     my $redis = Redis->new();
-    my $rid   = $redis->get( "MARKDOWN:KEY:$id" );
+    my $rid   = $redis->get("MARKDOWN:KEY:$id");
 
     #
     #  If the value is present
     #
     if ( $rid && ( $rid =~ /^([0-9a-z]+)$/i ) )
     {
+
         #
         #  Delete the key
         #
@@ -433,13 +438,16 @@ sub view
     #  Possibly from the session.
     #
     my $session = $self->param('session');
-    if ( $session && $session->param( "flash" ) && length( $session->param( "flash" )) )
+    if ( $session &&
+         $session->param("flash") &&
+         length( $session->param("flash") ) )
     {
+
         # get the flash
-        $flash = $session->param( "flash" );
+        $flash = $session->param("flash");
 
         # empty?
-        if ( length( $flash ) )
+        if ( length($flash) )
         {
             $session->param( "flash", "" );
         }
@@ -484,7 +492,7 @@ sub view
     # Render.
     #
     $template->param( id => $id );
-    $template->param( flash => $flash ) if ( $flash );
+    $template->param( flash => $flash ) if ($flash);
     return ( $template->output() );
 }
 
@@ -518,10 +526,10 @@ sub raw
     my $uid   = decode_base36($id);
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
-    if ( length( $text ) )
+    if ( length($text) )
     {
         $self->header_add( '-type' => 'text/plain' );
-        return( $text );
+        return ($text);
     }
     else
     {
@@ -577,14 +585,14 @@ sub saveMarkdown
 
 sub authLink
 {
-    my( $self, $id ) = ( @_ );
+    my ( $self, $id ) = (@_);
 
-    my $cgi   = $self->query();
+    my $cgi = $self->query();
 
     #
     #  The deletion link is "hash( time, ip, id )";
     #
-    my $key = time . $cgi->remote_host() . $id ;
+    my $key    = time . $cgi->remote_host() . $id;
     my $digest = md5_hex($key);
 
     #
@@ -592,7 +600,7 @@ sub authLink
     #
     my $redis = Redis->new();
     $redis->set( "MARKDOWN:KEY:$digest", $id );
-    return( $digest );
+    return ($digest);
 }
 
 
