@@ -1,17 +1,50 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
   <head>
-    <title>Markdown Sharing</title>
-    <link rel="stylesheet" type="text/css" href="/css/c.css" media="screen" />
+    <title>MarkdownSha.re : Simple Markdown sharing</title>
+    <link rel="stylesheet" type="text/css" href="/css/c.css" title="Default" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   </head>
   <body>
-    <h2>Markdown Sharing</h2>
-    <p>TODO: Write some text here.</p>
-
-    <h2>Programmatic Submission</h2>
+    <div id="header">
+      <div id="logo">
+        <h1><a href="/"><b>MarkdownSha.re</b></a></h1>
+        <h4>Simple sharing of markdown text</h4>
+      </div>
+      <div id="links">
+        <ul>
+          <li><a href="/" title="Home">Home</a></li>
+          <li><a href="/create/" title="Create">Create</a></li>
+        </ul>
+      </div>
+    </div>
+    <p>&nbsp;</p>
     <blockquote>
+      <h1>Welcome to <tt>Markdownsha.re</tt></h1>
+      <blockquote>
+        <p>This site allows you to easily paste some Markdown-formatted text, and share it with the world.</p>
+        <ul>
+          <li>No fees.</li>
+          <li>No account.</li>
+          <li>No restrictions.</li>
+        </ul>
+        <p><a href="/create">Share your markdown</a>.</p>
+      </blockquote>
+
+      <h2>API</h2>
+      <blockquote>
+        <p>Rather than using the website you can submit text by POSTing your data to the <a href="/create">creation end-point</a>:</p>
 <pre>
-$ curl -H "Accept: application/json" --data "text=some+stuff" -X POST http://markdownsha.re/create/
+$ curl -H "Accept: application/json" -X POST --data "text=text+goes+here" http://markdownsha.re/create/
 </pre>
+<p>Or from the contents of a file:</p>
+<pre>
+$ curl -H "Accept: application/json" -X POST -F "text=&lt;/path/to/text.md" http://markdownsha.re/create/
+
+</pre>
+      </blockquote>
     </blockquote>
+    <p></p>
   </body>
 </html>
+

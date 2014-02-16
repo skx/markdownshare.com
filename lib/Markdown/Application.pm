@@ -193,7 +193,7 @@ sub create
                 #
                 #  Build up the redirect link.
                 #
-                my $url = "http://" . $ENV{ 'SERVER_NAME' } . "/view/" . $id;
+                my $url = $cgi->url( -base => 1 ) . "/view/" . $id;
                 return ("{\"id\":\"$id\",\"link\":\"$url\"}");
             }
             else
