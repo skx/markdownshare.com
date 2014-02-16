@@ -2,9 +2,15 @@
 markdown.share
 --------------
 
-
 This is a simple pastebin-like service which allows a user to submit
 text which is formatted in Markdown, and share the resulting HTML.
+
+A user uploads Markdown and both the rendered HTML and the original
+markdown are available.
+
+The user will be able to delete the content post-upload, if they
+so wish.
+
 
 
 Requirements
@@ -32,7 +38,7 @@ Installing them on a Debian GNU/Linux host should be as simple as:
 Live Demo
 ---------
 
-* http://markdownsha.re/
+* http://markdownshare.com/
 
 
 Steve
