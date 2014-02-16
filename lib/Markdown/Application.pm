@@ -104,13 +104,18 @@ sub teardown
 }
 
 
-#
-# Called before CGI::App dispatches to a runmode, merge GET + POST
-# parameters.
-#
-# Source:
-#  * http://www.perlmonks.org/?node_id=748939
-#
+
+=begin doc
+
+Called before CGI::App dispatches to a runmode, merge GET + POST
+parameters.
+
+Source - http://www.perlmonks.org/?node_id=748939
+
+=end doc
+
+=cut
+
 sub cgiapp_prerun
 {
     my ($self) = @_;
