@@ -9,17 +9,24 @@
 
 <!-- tmpl_if name='html' -->
 <h2>Preview</h2>
+<blockquote>
 <!-- tmpl_var name='html' -->
+</blockquote>
 <!-- /tmpl_if -->
 
 
+<h2>Markdown</h2>
+<blockquote>
 <form action="/cgi-bin/index.cgi" method="POST" >
+<div class="ta">
 <textarea rows="40" cols="200" name="text"><!-- tmpl_var name="content" --></textarea>
+</div>
 <p>
 <input type="hidden" name="mode" value="create">
 <input type="submit" name="submit" value="Preview">
 <input type="submit" name="submit" value="Create">
 </p>
 </form>
+</blockquote>
   </body>
 </html>
