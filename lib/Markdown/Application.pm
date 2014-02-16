@@ -229,7 +229,7 @@ sub create
         #
         #  Render the text
         #
-        if ( length( $txt ) )
+        if ( length($txt) )
         {
             my $html = render($txt);
 
@@ -272,8 +272,8 @@ sub view
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
 
-    die "Missing ID" unless( $id );
-    die "Invalid ID" unless( $id =~ /^([a-z0-9]+)$/i );
+    die "Missing ID" unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
 
     #
     #  Decode and get the text.
@@ -290,7 +290,7 @@ sub view
     #
     #  Get the ID from Redis.
     #
-    if ( defined( $text ) && length( $text ) )
+    if ( defined($text) && length($text) )
     {
         $text = render($text);
         $template->param( html => $text );
