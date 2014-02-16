@@ -137,6 +137,7 @@ sub setup
 
         # Handlers
         'index'  => 'index',
+        'cheat'  => 'cheat',
         'create' => 'create',
         'view'   => 'view',
         'raw'    => 'raw',
@@ -230,6 +231,20 @@ sub index
     #
     my $url = $cgi->url( -base => 1 );
     $template->param( domain => $url );
+
+    return ( $template->output() );
+}
+
+
+sub cheat
+{
+    my ($self) = (@_);
+
+    #
+    #  Prepare
+    #
+    my $cgi      = $self->query();
+    my $template = $self->load_template("cheat.tmpl");
 
     return ( $template->output() );
 }
