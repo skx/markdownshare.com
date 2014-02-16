@@ -6,6 +6,7 @@
       <div id="links">
         <ul>
           <li><a href="/" title="Home">Home</a></li>
+          <li><a href="/api/" title="API Options">API</a></li>
           <li><a href="/create/" title="Create">Create</a></li>
           <li><a href="/cheatsheet/" title="Markdown Cheatsheet">Cheatsheet</a></li>
         </ul>

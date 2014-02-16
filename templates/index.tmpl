@@ -18,24 +18,9 @@
           <li>No account creation required.</li>
           <li>No restriction on textual content.</li>
         </ul>
-        <p>Get started <a href="/create">sharing your markdown</a> text.</p>
+        <p>Get started <a href="/create">sharing your markdown</a> text - you can do so programmatically via <a href="/api/">our API</a> if you prefer.</p>
       </blockquote>
-      <h2>API</h2>
-      <blockquote>
-        <p>Rather than using the website you may also submit text by POSTing your data directly to the <a href="/create">creation end-point</a>:</p>
-<pre>
-$ curl -H "Accept: application/json" -X POST --data "text=text+goes+here" <!-- tmpl_var name='domain' -->/create/
-</pre>
-<p>Or by reading the contents from a file:</p>
-<pre>
-$ curl -H "Accept: application/json" -X POST -F "text=&lt;/path/to/text.md" <!-- tmpl_var name='domain' -->/create/
-</pre>
-<p>There are many command-line paste-clients out there.  If you've got <tt>pastebinit</tt> installed you can save <a href="/markdownshare.com.conf">this file</a> beneath <tt>/usr/share/pastebin.d/</tt> and use this site directly:</p>
-<pre>
-shelob ~ $ uptime | pastebinit -b http://markdownshare.com/
-http://markdownshare.com/view/11
-</pre>
-      </blockquote>
+
       <h2>Future Changes?</h2>
       <blockquote>
         <p>If you have any feature-requests, or suggestions, please do <a href="http://steve.org.uk/contact/">drop me a mail</a>.</p>
