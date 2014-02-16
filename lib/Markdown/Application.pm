@@ -144,6 +144,7 @@ sub setup
 
         # Handlers
         'index'  => 'index',
+        'api'    => 'api',
         'cheat'  => 'cheat',
         'create' => 'create',
         'delete' => 'delete',
@@ -261,6 +262,20 @@ sub cheat
     #
     my $cgi      = $self->query();
     my $template = $self->load_template("cheat.tmpl");
+
+    return ( $template->output() );
+}
+
+
+sub api
+{
+    my ($self) = (@_);
+
+    #
+    #  Prepare
+    #
+    my $cgi      = $self->query();
+    my $template = $self->load_template("api.tmpl");
 
     return ( $template->output() );
 }
