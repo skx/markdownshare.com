@@ -20,27 +20,26 @@
     </div>
     <p>&nbsp;</p>
     <blockquote>
-      <h1>Welcome to <tt>Markdownsha.re</tt></h1>
+      <h1>Welcome to <span style="color:red;">Markdownsha.re</span></h1>
       <blockquote>
-        <p>This site allows you to easily paste some Markdown-formatted text, and share it with the world.</p>
+        <p>This site allows you to easily paste some Markdown-formatted text, and then share the rendered result with the world.</p>
+        <p>In short this is a "markdown-using pastebin" site.</p>
         <ul>
-          <li>No fees.</li>
-          <li>No account.</li>
-          <li>No restrictions.</li>
+          <li>No charge to use the site.</li>
+          <li>No account creation required.</li>
+          <li>No restriction on textual content.</li>
         </ul>
-        <p><a href="/create">Share your markdown</a>.</p>
+        <p>Get started <a href="/create">sharing your markdown</a> text.</p>
       </blockquote>
-
       <h2>API</h2>
       <blockquote>
-        <p>Rather than using the website you can submit text by POSTing your data to the <a href="/create">creation end-point</a>:</p>
+        <p>Rather than using the website you may also submit text by POSTing your data directly to the <a href="/create">creation end-point</a>:</p>
 <pre>
 $ curl -H "Accept: application/json" -X POST --data "text=text+goes+here" http://markdownsha.re/create/
 </pre>
-<p>Or from the contents of a file:</p>
+<p>Or by reading the contents from a file:</p>
 <pre>
 $ curl -H "Accept: application/json" -X POST -F "text=&lt;/path/to/text.md" http://markdownsha.re/create/
-
 </pre>
       </blockquote>
     </blockquote>
