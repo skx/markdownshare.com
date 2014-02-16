@@ -266,23 +266,40 @@ sub view
 {
     my ($self) = (@_);
 
+    #
+    #  Get the ID
+    #
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
-    my $uid = decode_base36($id);
+
+    die "Missing ID" unless( $id );
+    die "Invalid ID" unless( $id =~ /^([a-z0-9]+)$/i );
+
+    #
+    #  Decode and get the text.
+    #
+    my $redis = Redis->new();
+    my $uid   = decode_base36($id);
+    my $text  = $redis->get("MARKDOWN:$uid:TEXT");
+
+    #
+    # Load the template
+    #
+    my $template = $self->load_template("view.tmpl");
 
     #
     #  Get the ID from Redis.
     #
-    my $redis = Redis->new();
-    my $text  = $redis->get("MARKDOWN:$uid:TEXT");
-    $text = render($text);
+    if ( defined( $text ) && length( $text ) )
+    {
+        $text = render($text);
+        $template->param( html => $text );
+    }
 
     #
-    #  Return it
+    # Render.
     #
-    my $template = $self->load_template("view.tmpl");
-    $template->param( html => $text, id => $id );
-
+    $template->param( id => $id );
     return ( $template->output() );
 }
 

@@ -21,11 +21,18 @@
 
     <p>&nbsp;</p>
 
+<!-- tmpl_if name='html' -->
     <blockquote>
       <div style="border:1px solid black;">
         <!-- tmpl_var name='html' -->
       </div>
     </blockquote>
+<!-- tmpl_else -->
+    <h1>Not Found</h1>
+    <blockquote>
+      <p>The rendered Markdown you were looking for is not here.</p>
+    </blockquote>
+<!-- /tmpl_if -->
     <p></p>
   </body>
 </html>
