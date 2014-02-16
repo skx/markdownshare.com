@@ -17,14 +17,16 @@ In addition to having `redis` listening upon localhost you will
 need the following Perl modules:
 
 * CGI::Application
+* Digest::MD5
 * HTML::Template
+* JSON
 * Math::Base36
 * Redis
 * Text::Markdown
 
 Installing them on a Debian GNU/Linux host should be as simple as:
 
-     $ apt-get install libhtml-template libmath-base36 libredis-perl libtext-markdown-perl
+     $ apt-get install libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-markdown-perl
 
 
 Live Demo

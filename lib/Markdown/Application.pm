@@ -244,6 +244,14 @@ sub index
 }
 
 
+=begin doc
+
+Load the cheat-sheet.
+
+=end doc
+
+=cut
+
 sub cheat
 {
     my ($self) = (@_);
@@ -309,8 +317,7 @@ sub create
                 #
                 #  Build up the redirect link.
                 #
-                return to_json( \%hash
-                              );
+                return to_json( \%hash );
             }
             else
             {
@@ -376,6 +383,14 @@ sub create
 }
 
 
+=begin doc
+
+Delete a prior-upload by ID.
+
+=end doc
+
+=cut
+
 sub delete
 {
     my ($self) = (@_);
@@ -392,7 +407,7 @@ sub delete
     #
     #  Find the value, and see if it exists
     #
-    my $redis = Redis->new();
+    my $redis = $self->{ 'redis' };
     my $rid   = $redis->get("MARKDOWN:KEY:$id");
 
     #
@@ -416,6 +431,8 @@ sub delete
         return "Invalid auth-key: $rid";
     }
 }
+
+
 
 =begin doc
 
@@ -470,7 +487,7 @@ sub view
     #
     #  Decode and get the text.
     #
-    my $redis = Redis->new();
+    my $redis = $self->{ 'redis' };
     my $uid   = decode_base36($id);
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
@@ -571,7 +588,7 @@ sub saveMarkdown
     #
     #  Create the ID
     #
-    my $redis = Redis->new();
+    my $redis = $self->{ 'redis' };
     my $id    = $redis->incr("MARKDOWN:COUNT");
 
     #
@@ -582,6 +599,14 @@ sub saveMarkdown
     return ( encode_base36($id) );
 }
 
+
+=begin doc
+
+Create an auth-link for a given ID.
+
+=end doc
+
+=cut
 
 sub authLink
 {
@@ -598,7 +623,7 @@ sub authLink
     #
     # Set the value
     #
-    my $redis = Redis->new();
+    my $redis = $self->{ 'redis' };
     $redis->set( "MARKDOWN:KEY:$digest", $id );
     return ($digest);
 }
