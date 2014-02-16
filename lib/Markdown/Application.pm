@@ -24,6 +24,28 @@ use Text::Markdown 'markdown';
 
 
 
+#
+# Called before CGI::App dispatches to a runmode, merge GET + POST
+# parameters.
+#
+# Source:
+#  * http://www.perlmonks.org/?node_id=748939
+#
+sub cgiapp_prerun
+{
+    my ($self) = @_;
+
+    # $self->mode_param so we don't have to go back and change this if we
+    # ever decide to use something other than rm
+    if ($self->query->url_param($self->mode_param))
+    {
+        # prerun_mode lets you change CGI::Apps notion of the current runmode
+        $self->prerun_mode($self->query->url_param($self->mode_param));
+    }
+    return;
+}
+
+
 
 =begin doc
 
@@ -39,10 +61,10 @@ sub setup
 
     $self->run_modes(
 
-        # default
-        'index' => 'index',
-        'create'     => 'create',
-        'view'      => 'view',
+        # Handlers
+        'index'  => 'index',
+        'create' => 'create',
+        'view'   => 'view',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
@@ -60,7 +82,7 @@ sub setup
 
 =begin doc
 
-Redirect to the given URL - and attempt to keep cookies correct.
+Redirect to the given URL.
 
 =end doc
 
@@ -146,37 +168,72 @@ sub create
 
     my $cgi  = $self->query();
     my $sub  = $cgi->param( "submit" );
+    my $txt  = $cgi->param( "text" ) || "";
 
+
+    #
+    #  If we accept application/json.
+    #
+    foreach my $accept ( $cgi->Accept() )
+    {
+        if ( $accept =~ /application\/json/i )
+        {
+            #
+            #  If we have TEXT submitted.
+            #
+            if ( $txt )
+            {
+                #
+                #  Save it.
+                #
+                my $id = $self->saveMarkdown( $txt );
+
+                #
+                #  Build up the redirect link.
+                #
+                my $url = "http://" . $ENV{'SERVER_NAME'} . "/view/" . $id;
+                return( "{\"id\":\"$id\",\"link\":\"$url\"}" );
+            }
+            else
+            {
+
+
+                $self->header_props( -status => 404 );
+                return "Missing TEXT parameter";
+            }
+        }
+    }
+
+
+    #
+    #  Load the output template
+    #
     my $template = $self->load_template("create.tmpl");
 
+    #
+    #
+    #
     if ( $sub && ( $sub =~ /preview/i ) )
     {
         #
         #  Render the text
         #
-        my $html = render($cgi->param( "text" ) );
+        my $html = render($txt);
 
+        #
+        #  Populate both the text and the HTML
+        #
         $template->param( html => $html,
-                          content => $cgi->param( "text" )
+                          content => $txt,
                         );
     }
     elsif ( $sub && ( $sub =~ /create/i ) )
     {
         #
-        #  Create the ID
-        #
-        my $redis = Redis->new();
-        my $id    = $redis->incr( "MARKDOWN:COUNT" );
-
-        #
-        #  Set the text
-        #
-        $redis->set( "MARKDOWN:$id:TEXT" , $cgi->param( "text" ) );
-
-        #
         #  Return
         #
-        return( $self->redirectURL( "/view/" . encode_base36( $id ) ) );
+        my $id = $self->saveMarkdown( $txt );
+        return( $self->redirectURL( "/view/" . $id  ) );
     }
 
     return ( $template->output() );
@@ -193,7 +250,6 @@ Show the contents of a paste.
 
 sub view
 {
-
     my ($self) = (@_);
 
     my $cgi  = $self->query();
@@ -201,7 +257,7 @@ sub view
     my $uid  = decode_base36($id);
 
     #
-    #  Create the ID
+    #  Get the ID from Redis.
     #
     my $redis = Redis->new();
     my $text  = $redis->get( "MARKDOWN:$uid:TEXT" );
@@ -217,11 +273,47 @@ sub view
 }
 
 
+=begin doc
+
+Render the text.
+
+=end doc
+
+=cut
+
 sub render
 {
     my ( $txt ) = (@_ );
     return( markdown( $txt ) );
 }
+
+
+=begin doc
+
+Populate the given text in the next ID.
+
+=end doc
+
+=cut
+
+sub saveMarkdown
+{
+    my( $self, $txt ) = ( @_ );
+
+    #
+    #  Create the ID
+    #
+    my $redis = Redis->new();
+    my $id    = $redis->incr( "MARKDOWN:COUNT" );
+
+    #
+    #  Set the text
+    #
+    $redis->set( "MARKDOWN:$id:TEXT" , $txt );
+
+    return( encode_base36( $id ) );
+}
+
 
 
 =begin doc
