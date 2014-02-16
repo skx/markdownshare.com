@@ -155,10 +155,12 @@ sub setup
 
     $self->run_modes(
 
-        # Handlers
-        'index'  => 'index',
-        'api'    => 'api',
-        'cheat'  => 'cheat',
+        # Static-page Handlers
+        'index' => sub {showStatic( $self, 'index.tmpl' )},
+        'api'   => sub {showStatic( $self, 'api.tmpl' )},
+        'cheat' => sub {showStatic( $self, 'cheat.tmpl' )},
+
+        # Real handlers.
         'create' => 'create',
         'delete' => 'delete',
         'view'   => 'view',
@@ -255,64 +257,22 @@ sub load_template
 }
 
 
+
 =begin doc
 
-Show the index page.
+Show a static page.
 
 =end doc
 
 =cut
 
-sub index
+sub showStatic
 {
-    my ($self) = (@_);
+    my ( $self, $page ) = (@_);
 
-    #
-    #  Prepare
-    #
-    my $cgi      = $self->query();
-    my $template = $self->load_template("index.tmpl");
+    my $template = $self->load_template($page);
 
-    return ( $template->output() );
-}
-
-
-=begin doc
-
-Load the cheat-sheet.
-
-=end doc
-
-=cut
-
-sub cheat
-{
-    my ($self) = (@_);
-
-    #
-    #  Prepare
-    #
-    my $cgi      = $self->query();
-    my $template = $self->load_template("cheat.tmpl");
-
-    return ( $template->output() );
-}
-
-
-sub api
-{
-    my ($self) = (@_);
-
-    #
-    #  Prepare
-    #
-    my $cgi      = $self->query();
-    my $template = $self->load_template("api.tmpl");
-
-
-    #
-    #  Set the domain
-    #
+    my $cgi = $self->query();
     my $url = $cgi->url( -base => 1 );
     $template->param( domain => $url );
 
@@ -369,14 +329,15 @@ sub create
                   $cgi->url( -base => 1 ) . "/delete/" . $auth;
 
                 #
-                #  Build up the redirect link.
+                #  Return the JSON object.
                 #
                 return to_json( \%hash );
             }
             else
             {
-
-
+                #
+                # We'll handle this better later.
+                #
                 $self->header_props( -status => 404 );
                 return "Missing TEXT parameter";
             }
@@ -423,7 +384,7 @@ sub create
         my $auth = $self->authLink($id);
 
         #
-        #  Set the session.
+        #  Set the session-flash parameter with the secret ID.
         #
         my $session = $self->param('session');
         if ($session)
@@ -672,6 +633,16 @@ sub authLink
     #  The deletion link is "hash( time, ip, id )";
     #
     my $key    = time . $cgi->remote_host() . $id;
+
+    #
+    # Add some more random data.
+    #
+    $key .= int(rand(1000));
+    $key .= int(rand(1000));
+
+    #
+    # Make it URL-safe
+    #
     my $digest = md5_hex($key);
 
     #
