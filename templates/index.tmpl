@@ -41,6 +41,11 @@ $ curl -H "Accept: application/json" -X POST --data "text=text+goes+here" <!-- t
 <pre>
 $ curl -H "Accept: application/json" -X POST -F "text=&lt;/path/to/text.md" <!-- tmpl_var name='domain' -->/create/
 </pre>
+<p>There are many command-line paste-clients out there.  If you've got <tt>pastebinit</tt> installed you can save <a href="/markdownshare.com.conf">this file</a> beneath <tt>/usr/share/pastebin.d/</tt> and use this site directly:</p>
+<pre>
+shelob ~ $ uptime | pastebinit -b http://markdownshare.com/
+http://markdownshare.com/view/11
+</pre>
       </blockquote>
       <h2>Future Changes?</h2>
       <blockquote>
