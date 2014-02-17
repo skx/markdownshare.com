@@ -52,15 +52,15 @@ sub setup
     $self->run_modes(
 
         # Static-page Handlers
-        'index' => sub {showStatic( $self, 'index.tmpl' )},
         'api'   => sub {showStatic( $self, 'api.tmpl' )},
         'cheat' => sub {showStatic( $self, 'cheat.tmpl' )},
+        'index' => sub {showStatic( $self, 'index.tmpl' )},
 
         # Real handlers.
         'create' => 'create',
         'delete' => 'delete',
-        'view'   => 'view',
         'raw'    => 'raw',
+        'view'   => 'view',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
