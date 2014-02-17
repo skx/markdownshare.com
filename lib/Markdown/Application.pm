@@ -289,10 +289,19 @@ sub delete
         }
 
         #
-        #  Delete the key
+        #  Unset the text
         #
         $redis->set( "MARKDOWN:$did:TEXT", "" );
-        $redis->del( "MARKDOWN:KEY:$id", "" );
+
+        #
+        #  Remove the auth-key.
+        #
+        $redis->del( "MARKDOWN:KEY:$id"  );
+
+        #
+        #  Remove this ID from the recent list of valid IDs, if present.
+        #
+        $redis->lrem( "MARKDOWN:RECENT", 1, $did );
 
         return ( $self->redirectURL( "/view/" . $rid ) );
     }
@@ -501,6 +510,12 @@ sub saveMarkdown
     #  Set the text
     #
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
+
+    #
+    #  Store the most recently used IDs.
+    #
+    $redis->rpush( "MARKDOWN:RECENT", $id );
+    $redis->ltrim( "MARKDOWN:RECENT", 0, 99 );
 
     return ($id);
 }
