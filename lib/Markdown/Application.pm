@@ -27,6 +27,7 @@ use base 'Markdown::Application::Base';
 #
 # Standard module(s)
 #
+use Data::UUID;
 use Digest::MD5 qw(md5_hex);
 use JSON;
 use HTML::Template;
@@ -231,6 +232,10 @@ sub create
         {
             $session->param( "flash", $auth );
         }
+
+        #
+        #  Redirect to view the new submission.
+        #
         return ( $self->redirectURL( "/view/" . $id ) );
     }
 
@@ -256,8 +261,11 @@ sub delete
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
 
-    die "Missing ID" unless ($id);
-    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
+    #
+    # If there's a missing ID redirect.  If the ID is bogus abort.
+    #
+    return ( $self->redirectURL("/") ) unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
     #  Find the value, and see if it exists
@@ -268,13 +276,21 @@ sub delete
     #
     #  If the value is present
     #
-    if ( $rid && ( $rid =~ /^([0-9a-z]+)$/i ) )
+    if ( $rid && ( $rid =~ /^([-0-9a-z]+)$/i ) )
     {
+
+        #
+        # If we have a legacy ID then decode, otherwise use as-is.
+        #
+        my $did = $rid;
+        if ( length($did) < 5 )
+        {
+            $did = decode_base36($id);
+        }
 
         #
         #  Delete the key
         #
-        my $did = decode_base36($rid);
         $redis->set( "MARKDOWN:$did:TEXT", "" );
         $redis->del( "MARKDOWN:KEY:$id", "" );
 
@@ -336,14 +352,28 @@ sub view
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
 
-    die "Missing ID" unless ($id);
-    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
+    #
+    # If there's a missing ID redirect.  If the ID is bogus abort.
+    #
+    return ( $self->redirectURL("/") ) unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
     #  Decode and get the text.
     #
+    #
+    # If we have a legacy ID then decode, otherwise use as-is.
+    #
+    my $uid = $id;
+    if ( length($id) < 5 )
+    {
+        $uid = decode_base36($id);
+    }
+
+    #
+    #  Get the text
+    #
     my $redis = $self->{ 'redis' };
-    my $uid   = decode_base36($id);
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
     #
@@ -388,14 +418,22 @@ sub raw
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
 
-    die "Missing ID" unless ($id);
-    die "Invalid ID" unless ( $id =~ /^([a-z0-9]+)$/i );
+    #
+    # If there's a missing ID redirect.  If the ID is bogus abort.
+    #
+    return ( $self->redirectURL("/") ) unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
-    #  Decode and get the text.
+    # If we have a legacy ID then decode, otherwise use as-is.
     #
+    my $uid = $id;
+    if ( length($id) < 5 )
+    {
+        $uid = decode_base36($id);
+    }
+
     my $redis = $self->{ 'redis' };
-    my $uid   = decode_base36($id);
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
     if ( length($text) )
@@ -441,17 +479,30 @@ sub saveMarkdown
     my ( $self, $txt ) = (@_);
 
     #
-    #  Create the ID
+    #  Create the ID, which will hopefully avoid collisions.
+    #
+    my $helper = Data::UUID->new();
+    my $id     = $helper->create_str();
+
+    #
+    #  We want to ensure that we don't collide.
     #
     my $redis = $self->{ 'redis' };
-    my $id    = $redis->incr("MARKDOWN:COUNT");
+    while ( defined( $redis->get($id) ) )
+    {
+
+        #
+        #  Regenerate
+        #
+        $id = $helper->create_str();
+    }
 
     #
     #  Set the text
     #
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
 
-    return ( encode_base36($id) );
+    return ($id);
 }
 
 
