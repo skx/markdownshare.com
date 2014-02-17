@@ -1,13 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
-  <head>
-    <title>MarkdownShare : Simple Markdown sharing</title>
-    <link rel="stylesheet" type="text/css" href="/css/c.css" title="Default" />
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-  </head>
-  <body>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<title>MarkdownShare : Share your markdown</title>
+
+</head>
+<body>
+<div id="wrap">
 <!-- tmpl_include name='header.inc' -->
-    <p>&nbsp;</p>
+
+
+<div id="content">
+
+
     <!-- tmpl_if name='html' -->
     <h1>Your Markdown Preview</h1>
     <blockquote>
@@ -15,8 +22,7 @@
     </blockquote>
     <!-- /tmpl_if -->
 
-
-    <h1>Enter Your Markdown</h1>
+    <h1>Share your Markdown</h1>
     <blockquote>
       <form action="/create" method="post" >
         <div class="ta">
@@ -29,6 +35,24 @@
         </p>
       </form>
     </blockquote>
-    <p></p>
-  </body>
+</div>
+
+
+<div class="clear"> </div>
+
+<div id="footer">
+
+<div class="left">
+</div>
+
+<div class="right">
+Copyright &copy; 2014 by <a href="http://steve.org.uk/">Steve Kemp</a>
+</div>
+
+<div class="clear"> </div>
+
+</div>
+
+</div>
+</body>
 </html>

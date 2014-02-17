@@ -1,15 +1,13 @@
-    <div id="header">
-      <div id="logo">
-        <h1><a href="/"><b>MarkdownShare</b></a></h1>
-        <h4>Simple sharing of markdown text</h4>
-      </div>
-      <div id="links">
-        <ul>
-          <li><a href="/" title="Home">Home</a></li>
-          <li><a href="/api/" title="API Options">API</a></li>
-          <li><a href="/create/" title="Create">Create</a></li>
-          <li><a href="/cheatsheet/" title="Markdown Cheatsheet">Cheatsheet</a></li>
-        </ul>
-      </div>
-    </div>
+<div id="header">
+<h1>MarkdownShare.com</h1>
+<h2>Quick and easy sharing of markdown text</h2>
+</div>
 
+<div id="topmenu">
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/api/">API</a></li>
+<li><a href="/create/">Create</a></li>
+<li><a href="/cheatsheet/">CheatSheet</a></li>
+</ul>
+</div>
