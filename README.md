@@ -23,6 +23,7 @@ In addition to having `redis` listening upon localhost you will
 need the following Perl modules:
 
 * CGI::Application
+* Data::UUID
 * Digest::MD5
 * HTML::Template
 * JSON
@@ -32,7 +33,22 @@ need the following Perl modules:
 
 Installing them on a Debian GNU/Linux host should be as simple as:
 
-     $ apt-get install libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-multimarkdown-perl
+     $ apt-get install libossp-uuid-perl libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-multimarkdown-perl
+
+
+Notes
+-----
+
+In the past we used a single incrementing integer for storing all
+submissions, which was base36-encoded for brevity.
+
+We've now switched to using UUIDs, which means that the URLs are longer
+but that it isn't possible for a remote attacker to spider the complete
+list of uploaded documents.
+
+It would have been possible to mix both schemes indefinitely, and allow
+the user to choose between "Normal" and "Secure", but I'd rather remove
+a checkbox/combobox and keep the interface simple.
 
 
 Live Demo
