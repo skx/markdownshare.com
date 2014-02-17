@@ -283,7 +283,7 @@ sub delete
     else
     {
         $self->header_props( -status => 404 );
-        return "Invalid auth-key: $rid";
+        return "Invalid auth-key!  (Has the post already been deleted?)";
     }
 }
 
