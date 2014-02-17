@@ -34,7 +34,7 @@ use JSON;
 use HTML::Template;
 use Math::Base36 ':all';
 use Redis;
-use Text::Markdown 'markdown';
+use Text::MultiMarkdown 'markdown';
 
 
 
