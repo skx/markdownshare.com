@@ -33,7 +33,9 @@ need the following Perl modules:
 
 Installing them on a Debian GNU/Linux host should be as simple as:
 
-     $ apt-get install libossp-uuid-perl libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-multimarkdown-perl
+     $ apt-get install  libossp-uuid-perl libjson-perl libhtml-template-perl \
+     libmath-base36-perl libredis-perl libtext-multimarkdown-perl \
+     perl perl-modules libcgi-application-perl libcgi-session-perl
 
 
 Notes
