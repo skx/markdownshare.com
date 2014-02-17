@@ -23,6 +23,7 @@ In addition to having `redis` listening upon localhost you will
 need the following Perl modules:
 
 * CGI::Application
+* CGI::Session
 * Data::UUID
 * Digest::MD5
 * HTML::Template
