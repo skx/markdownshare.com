@@ -17,6 +17,10 @@
 use strict;
 use warnings;
 
+
+use CGI::utf8;
+
+
 package Markdown::Application;
 use base 'CGI::Application';
 
@@ -82,7 +86,8 @@ sub cgiapp_init
         $self->header_props( -cookie => $cookie );
     }
 
-    binmode STDOUT, ':utf8';
+    binmode STDIN,  ":encoding(utf8)";
+    binmode STDOUT, ":encoding(utf8)";
 
 }
 
@@ -335,6 +340,7 @@ sub create
             }
             else
             {
+
                 #
                 # We'll handle this better later.
                 #
@@ -632,13 +638,13 @@ sub authLink
     #
     #  The deletion link is "hash( time, ip, id )";
     #
-    my $key    = time . $cgi->remote_host() . $id;
+    my $key = time . $cgi->remote_host() . $id;
 
     #
     # Add some more random data.
     #
-    $key .= int(rand(1000));
-    $key .= int(rand(1000));
+    $key .= int( rand(1000) );
+    $key .= int( rand(1000) );
 
     #
     # Make it URL-safe
