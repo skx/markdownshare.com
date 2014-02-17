@@ -44,6 +44,10 @@ font-size: 38px;
 line-height: 65px;
 letter-spacing: -1px;
 }
+#header h1 a, #header h1 a:hover, #header h1 a:visited {
+  color: black;
+  text-decoration: none;
+}
 #header h2 {
 -webkit-border-radius: 10px;
 -moz-border-radius: 10px;

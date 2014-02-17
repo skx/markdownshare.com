@@ -1,5 +1,5 @@
 <div id="header">
-<h1>MarkdownShare.com</h1>
+<h1><a href="/">MarkdownShare.com</a></h1>
 <h2>Quick and easy sharing of markdown text</h2>
 </div>
 
