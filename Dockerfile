@@ -7,17 +7,9 @@
 #     sudo docker build -t skxskx/markdown.share .
 #
 # Then to launch the image:
-#     sudo docker run -t -i -p 3333:80 skxskx/markdown.share /bin/bash
+#     sudo docker run -d -p 3333:80 skxskx/markdown.share
 #
-# Once launched you should start apache2 + redis and you're golden.
-# run:
-#
-#    /etc/init.d/redis-server start
-#    /etc/init.d/apache2 start
-#
-# Then exit by pressing "Ctrl-p Ctrl-q".
-#
-# Once you've done that you can open your favourite browser and point
+# Once launched you should open your favourite browser and point
 # it at http://localhost:3333/
 #
 # Steve
@@ -64,6 +56,11 @@ ADD ./docker/docker.conf /etc/apache2/sites-enabled/markdown-share.conf
 
 
 #
-# Complete.  The user will need to launch the daemons though, because
-# I'm done here.
+# Add a script to launch the two daemons
 #
+ADD ./docker/start.sh /srv/start.sh
+
+#
+# Now boot it up
+#
+CMD ["/srv/start.sh"]
