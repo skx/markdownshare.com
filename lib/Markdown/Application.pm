@@ -36,7 +36,6 @@ use Text::MultiMarkdown 'markdown';
 
 
 
-
 =begin doc
 
 Setup our run-mode mappings, and the defaults for the application.
@@ -118,7 +117,9 @@ sub create
 
 
     #
-    #  If we accept application/json.
+    #  See if the caller accepts "application/json", and handle
+    # that first - this is suboptimal and should be merged in better
+    # later on.
     #
     foreach my $accept ( $cgi->Accept() )
     {
@@ -141,11 +142,23 @@ sub create
                 #
                 my $auth = $self->authLink($id);
 
+                #
+                # Build up something sensible to return to the caller
+                #
+                # At the least they need to know:
+                #
+                #   * The ID.
+                #   * The view-link.
+                #   * The raw-link.
+                #   * The delete-link.
+                #
+                my $base = $cgi->url( -base => 1 );
+
                 my %hash;
-                $hash{ "id" } = $id;
-                $hash{ "link" } = $cgi->url( -base => 1 ) . "/view/" . $id;
-                $hash{ "delete" } =
-                  $cgi->url( -base => 1 ) . "/delete/" . $auth;
+                $hash{ "id" }     = $id;
+                $hash{ "link" }   = $base . "/view/" . $id;
+                $hash{ "raw" }    = $base . "/raw/" . $id;
+                $hash{ "delete" } = $base . "/delete/" . $auth;
 
                 #
                 #  Return the JSON object.
@@ -164,6 +177,13 @@ sub create
         }
     }
 
+
+    #
+    #  OK at this point we have a browser-based submission,
+    # with no acceptance of "application/json".
+    #
+    #  Proceed as per usual.
+    #
 
     #
     #  Load the output template
@@ -194,7 +214,7 @@ sub create
     {
 
         #
-        #  Return
+        #  Get the ID of the newly submitted entry.
         #
         my $id = $self->saveMarkdown($txt);
 
@@ -374,7 +394,7 @@ sub raw
     #
     #  Decode and get the text.
     #
-    my $redis = Redis->new();
+    my $redis = $self->{ 'redis' };
     my $uid   = decode_base36($id);
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
