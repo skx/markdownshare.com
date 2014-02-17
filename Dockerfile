@@ -17,6 +17,12 @@
 #
 # Then exit by pressing "Ctrl-p Ctrl-q".
 #
+# Once you've done that you can open your favourite browser and point
+# it at http://localhost:3333/
+#
+# Steve
+# --
+#
 
 
 #
