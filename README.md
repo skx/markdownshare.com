@@ -58,10 +58,11 @@ Deployment
 ----------
 
 Deployment should be pretty straightforward, there is a sample
-Apache2 virtual-host file provided beneath the `docker/` directory.
+Apache2 virtual-host file provided beneath the [docker sub-directory](docker/).
 
 As the name might suggest the software runs under `docker` too,
-via the provided Dockerfile.
+via the provided [Dockerfile](Dockerfile), although it does require you
+to manually start the daemons.
 
 
 Live Demo
