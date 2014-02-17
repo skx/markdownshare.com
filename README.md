@@ -28,11 +28,11 @@ need the following Perl modules:
 * JSON
 * Math::Base36
 * Redis
-* Text::Markdown
+* Text::MultiMarkdown
 
 Installing them on a Debian GNU/Linux host should be as simple as:
 
-     $ apt-get install libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-markdown-perl
+     $ apt-get install libdigest-md5 libjson-perl libhtml-template libmath-base36 libredis-perl libtext-multimarkdown-perl
 
 
 Live Demo
