@@ -34,8 +34,8 @@ need the following Perl modules:
 Installing them on a Debian GNU/Linux host should be as simple as:
 
      $ apt-get install  libossp-uuid-perl libjson-perl libhtml-template-perl \
-     libmath-base36-perl libredis-perl libtext-multimarkdown-perl \
-     perl perl-modules libcgi-application-perl libcgi-session-perl
+        libmath-base36-perl libredis-perl libtext-multimarkdown-perl \
+        perl perl-modules libcgi-application-perl libcgi-session-perl
 
 
 Notes
@@ -51,6 +51,16 @@ list of uploaded documents.
 It would have been possible to mix both schemes indefinitely, and allow
 the user to choose between "Normal" and "Secure", but I'd rather remove
 a checkbox/combobox and keep the interface simple.
+
+
+Deployment
+----------
+
+Deployment should be pretty straightforward, there is a sample
+Apache2 virtual-host file provided beneath the `docker/` directory.
+
+As the name might suggest the software runs under `docker` too,
+via the provided Dockerfile.
 
 
 Live Demo
