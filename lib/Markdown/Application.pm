@@ -130,7 +130,7 @@ sub create
             #
             #  If we have TEXT submitted.
             #
-            if ($txt)
+            if ($txt && length($txt))
             {
 
                 #
@@ -211,7 +211,8 @@ sub create
                               content => $txt, );
         }
     }
-    elsif ( $sub && ( $sub =~ /create/i ) )
+    elsif ( $sub && ( $sub =~ /create/i ) &&
+            length( $txt ) )
     {
 
         #
