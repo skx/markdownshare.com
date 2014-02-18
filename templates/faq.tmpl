@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="author" href="/humans.txt" />
+    <title>MarkdownShare : Frequently Asked Questions</title>
+  </head>
+  <body>
+    <div id="wrap">
+      <!-- tmpl_include name='header.inc' -->
+      <div id="content">
+        <h1>Frequently Asked Questions</h1>
+        <blockquote>
+          <dl>
+            <dt>What is this site for?</dt>
+            <dd>
+              <p>This site is solely designed to allow you to easily share markdown text.</p>
+              <p><a href="/create/">Paste in your markdown</a>, then share the resulting link with your friends, colleagues, or other people.</p>
+            </dd>
+            <dt>How secret is my uploaded text?</dt>
+            <dd>
+              <p>Although the URLs which are generated are "random" that is the only security present.  If a remote user finds a link to your text they can view it, or download it.</p>
+              <p><b>NOTE</b>: There is no intention of ever password-protecting the uploaded contents.</p>
+            </dd>
+            <dt>How is this site built?</dt>
+            <dd>
+              <p>The site is written with a small number of Perl libraries, and you can <a href="https://github.com/skx/markdown.share/">study the source code</a> if you wish.</p>
+            </dd>
+            <dt>Can I run my own install?</dt>
+            <dd>
+              <p>Yes you can, the previous question contained a link to the source code which powers this site, and you may also download a <tt>docker</tt> container containing a running copy of the code.</p>
+              <p>The docker container can be found <a href="https://index.docker.io/u/skxskx/markdown.share/">here in the docker index</a>.</p>
+            </dd>
+          </dl>
+        </blockquote>
+      </div>
+      <div class="clear"> </div>
+      <!-- tmpl_include name='footer.inc' -->
+    </div>
+    <script src="/js/k.js"></script>
+    <script type="text/javascript">
+      var o = { cheat : function() { window.location.assign("/view/2a");   };
+      var e = new KONAMI( o );
+    </script>
+  </body>
+</html>

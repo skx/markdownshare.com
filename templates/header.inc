@@ -9,5 +9,6 @@
 <li><a href="/api/">API</a></li>
 <li><a href="/create/">Create</a></li>
 <li><a href="/cheatsheet/">CheatSheet</a></li>
+<li><a href="/faq/">FAQ</a></li>
 </ul>
 </div>

@@ -54,6 +54,7 @@ sub setup
         # Static-page Handlers
         'api'   => sub {showStatic( $self, 'api.tmpl' )},
         'cheat' => sub {showStatic( $self, 'cheat.tmpl' )},
+        'faq'   => sub {showStatic( $self, 'faq.tmpl' )},
         'index' => sub {showStatic( $self, 'index.tmpl' )},
 
         # Real handlers.
