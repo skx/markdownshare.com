@@ -45,6 +45,8 @@ RUN apt-get install --yes --force-yes libossp-uuid-perl libjson-perl libhtml-tem
 #  Install git and checkout our code
 #
 RUN apt-get install --yes --force-yes git
+
+RUN echo 2014-02-18
 RUN cd /srv && git clone https://github.com/skx/markdown.share.git
 
 
