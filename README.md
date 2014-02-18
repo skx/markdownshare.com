@@ -57,12 +57,21 @@ a checkbox/combobox and keep the interface simple.
 Deployment
 ----------
 
-Deployment should be pretty straightforward, there is a sample
-Apache2 virtual-host file provided beneath the [docker sub-directory](docker/).
+Deployment should be pretty straightforward if you're familiar with
+running Perl-based CGI applications.
 
-As the name might suggest the software runs under `docker` too,
-via the provided [Dockerfile](Dockerfile), although it does require you
-to manually start the daemons.
+There is a [sample Apache2 virtual-host](docker/docker.conf) file provided,
+which documents the rewrites which are required to make the application
+run with clean URLs.
+
+Additionally there is a provided [Dockerfile](Dockerfile), which allows
+you to easily build a container with a copy of the project code within it.
+This container may then be launched to give yourself a local instance
+of the application in an isolated environment.
+
+There is a pre-built container available from the docker index:
+
+* [skxskx/markdown.share](https://index.docker.io/u/skxskx/markdown.share/)
 
 
 Live Demo
