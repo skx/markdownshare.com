@@ -131,7 +131,7 @@ sub create
             #
             #  If we have TEXT submitted.
             #
-            if ($txt && length($txt))
+            if ( $txt && length($txt) )
             {
 
                 #
@@ -212,8 +212,9 @@ sub create
                               content => $txt, );
         }
     }
-    elsif ( $sub && ( $sub =~ /create/i ) &&
-            length( $txt ) )
+    elsif ( $sub &&
+            ( $sub =~ /create/i ) &&
+            length($txt) )
     {
 
         #
@@ -285,7 +286,7 @@ sub delete
         # If we have a legacy ID then decode, otherwise use as-is.
         #
         my $did = $rid;
-        if ( length($did) < 5 )
+        if ( length($did) < 3 )
         {
             $did = decode_base36($id);
         }
@@ -298,7 +299,7 @@ sub delete
         #
         #  Remove the auth-key.
         #
-        $redis->del( "MARKDOWN:KEY:$id"  );
+        $redis->del("MARKDOWN:KEY:$id");
 
         #
         #  Remove this ID from the recent list of valid IDs, if present.
@@ -376,7 +377,7 @@ sub view
     # If we have a legacy ID then decode, otherwise use as-is.
     #
     my $uid = $id;
-    if ( length($id) < 5 )
+    if ( length($id) < 3 )
     {
         $uid = decode_base36($id);
     }
@@ -393,13 +394,28 @@ sub view
     my $template = $self->load_template("view.tmpl");
 
     #
-    #  Get the ID from Redis.
+    #  If we have the text then render it.
     #
     if ( defined($text) && length($text) )
     {
         $text = render($text);
         $template->param( html => $text );
     }
+    else
+    {
+
+        # Look for a local copy
+        if ( $uid =~ /^([a-z]+)$/ )
+        {
+            $text = $self->loadFile("samples/$uid.md");
+            if ($text)
+            {
+                $text = render($text);
+                $template->param( html => $text );
+            }
+        }
+    }
+
 
     #
     # Render.
@@ -439,13 +455,23 @@ sub raw
     # If we have a legacy ID then decode, otherwise use as-is.
     #
     my $uid = $id;
-    if ( length($id) < 5 )
+    if ( length($id) < 3 )
     {
         $uid = decode_base36($id);
     }
 
     my $redis = $self->{ 'redis' };
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
+
+    if ( !$text )
+    {
+
+        # Look for a local copy
+        if ( $uid =~ /^([a-z]+)$/ )
+        {
+            $text = $self->loadFile("samples/$uid.md");
+        }
+    }
 
     if ( length($text) )
     {

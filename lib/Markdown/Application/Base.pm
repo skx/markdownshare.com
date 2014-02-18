@@ -227,6 +227,43 @@ sub load_template
 
 =begin doc
 
+Load a file from beneath the project root, if it exists.
+
+=end doc
+
+=cut
+
+sub loadFile
+{
+    my ( $self, $file ) = (@_);
+
+    my $path;
+
+    foreach my $dir (qw! ../../ ../  ./ !)
+    {
+        $path = $dir . $file if ( -e $dir . $file );
+    }
+
+    return undef unless ( defined($path) );
+
+    #
+    #  Load the file
+    #
+    my $text = "";
+
+    open( my $file, "<", $path );
+    while ( my $line = <$file> )
+    {
+        $text .= $line;
+    }
+    close($file);
+
+    return ($text);
+}
+
+
+=begin doc
+
 Called when an unknown mode is encountered.
 
 =end doc
