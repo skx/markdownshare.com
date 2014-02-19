@@ -81,7 +81,7 @@ sub new
     #
     #  Look to see if we have the required module available
     #
-    $self->{'disabled'} = 0;
+    $self->{ 'disabled' } = 0;
 
     my $str = "use HTML::TokeParser;";
     ## no critic (Eval)
@@ -1016,25 +1016,29 @@ sub expand
 
             # Text tag?
             my $input = $token->[0];
-            while ( $input =~ /^([^:]*):([^:]+):(.*)$/ )
+
+            foreach my $token ( split( /([ \t\n\r]+)/, $input ) )
             {
-                my $pre = $1;
-                my $key = $2;
-                my $aft = $3;
-
-                if ( $known{ $key } )
+                if ( $token =~ /^:([^:]+):$/ )
                 {
-                    $return .=
-                      "$pre<img src=\"$path/$key.png\" width=\"32\" height=\"32\" alt=\"$key\" />";
-                }
-                else
-                {
-                    $return .= $pre . ":" . $key . ":";
-                }
 
-                $input = $aft;
+                    #
+                    # The emojis token itself
+                    #
+                    my $key = $1;
+
+                    #
+                    # If this is one we know, then we can replace it.
+                    #
+                    if ( $known{ $key } )
+                    {
+                        $token =
+                          "<img src=\"$path/$key.png\" width=\"32\" height=\"32\" alt=\"$key\" />";
+                    }
+
+                }
+                $return .= $token;
             }
-            $return .= $input;
         }
         elsif ( $ttype =~ /(?:C|D)/ )
         {
