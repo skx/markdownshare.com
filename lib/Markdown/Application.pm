@@ -30,6 +30,7 @@ use base 'Markdown::Application::Base';
 use Data::UUID;
 use Digest::MD5 qw(md5_hex);
 use JSON;
+use HTML::Emojis;
 use HTML::Template;
 use Math::Base36 ':all';
 use Text::MultiMarkdown 'markdown';
@@ -499,7 +500,19 @@ Render the text.
 sub render
 {
     my ($txt) = (@_);
-    return ( markdown($txt) );
+
+    #
+    # Convert to HTML
+    #
+    my $html = markdown($txt);
+
+    #
+    # Now we have HTML we can process the content for known-emojis too.
+    #
+    my $helper = HTML::Emojis->new( path => "/img/emojis" );
+
+    return ( $helper->expand($html) );
+
 }
 
 
