@@ -27,9 +27,37 @@ strings with links to the appropriate image.
 The code is pretty naive and contains a list of all the permissable
 names, which are assumed to correspond to the actual images.
 
+=cut
 
+=head1 SAMPLE
+
+The following is a sample HTML text that could be processed by this
+module:
+
+=for example begin
+
+   <p>This will work: :wink:</p>
+   <p>This is me, drinking :coffee:!</p>
+
+=for example end
 
 =cut
+
+=head1 AUTHOR
+
+Steve Kemp <steve@steve.org.uk>
+
+=cut
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014 Steve Kemp <steve@steve.org.uk>.
+
+This library is free software. You can modify and or distribute it under
+the same terms as Perl itself.
+
+=cut
+
 
 use strict;
 use warnings;
@@ -57,9 +85,11 @@ use warnings;
 
 
 
-=head2 new
+=begin doc
 
   Create a new instance of this object.
+
+=end doc
 
 =cut
 
