@@ -1,3 +1,36 @@
+# -*- cperl -*- #
+
+=head1 NAME
+
+HTML::Emojis - A module for replacing emojis with image references.
+
+=head1 SYNOPSIS
+
+=for example begin
+
+    #!/usr/bin/perl -w
+
+    use HTML::Emojis;
+
+    my $helper = HTML::Emojis->new( path => '/images/emojis' );
+
+    $html = $helper->expand( $html );
+
+=for example end
+
+
+=head1 DESCRIPTION
+
+This module contains code for expanding HTML to replace ":emojis:"
+strings with links to the appropriate image.
+
+The code is pretty naive and contains a list of all the permissable
+names, which are assumed to correspond to the actual images.
+
+
+
+=cut
+
 
 package HTML::Emojis;
 
