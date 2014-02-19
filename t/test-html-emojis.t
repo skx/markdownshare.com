@@ -39,6 +39,9 @@ foreach my $line (<DATA>)
         my $inp = $1;
         my $out = $2;
 
+        $inp = "\n" if ( $inp eq "\\n" ) ;
+        $out = "\n" if ( $out eq "\\n" ) ;
+
         my $expanded = $helper->expand( $inp );
 
         is( $out, $expanded, "We got the output we expected" );
@@ -61,3 +64,6 @@ __DATA__
 
 # Unknown type
 <p>:fake:</p>|<p>:fake:</p>
+
+# Empty
+\n|\n
