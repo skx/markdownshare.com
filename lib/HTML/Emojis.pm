@@ -31,6 +31,8 @@ names, which are assumed to correspond to the actual images.
 
 =cut
 
+use strict;
+use warnings;
 
 package HTML::Emojis;
 

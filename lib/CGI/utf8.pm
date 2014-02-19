@@ -22,6 +22,8 @@ CGI::utf8 - A helper to decode UTF8 correctly.
 
 =cut
 
+use strict;
+use warnings;
 
 package CGI::utf8;
 
