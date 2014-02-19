@@ -244,19 +244,19 @@ sub loadFile
         $path = $dir . $file if ( -e $dir . $file );
     }
 
-    return undef unless ( defined($path) );
+    return unless ( defined($path) );
 
     #
     #  Load the file
     #
     my $text = "";
 
-    open( my $file, "<", $path );
-    while ( my $line = <$file> )
+    open( my $handle, "<", $path );
+    while ( my $line = <$handle> )
     {
         $text .= $line;
     }
-    close($file);
+    close($handle);
 
     return ($text);
 }
