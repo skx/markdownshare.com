@@ -26,6 +26,8 @@ need the following Perl modules:
 * CGI::Session
 * Data::UUID
 * Digest::MD5
+* HTML::Parser
+   * This is optional and used to provide `:emojis:` support
 * HTML::Template
 * JSON
 * Math::Base36
@@ -36,7 +38,8 @@ Installing them on a Debian GNU/Linux host should be as simple as:
 
      $ apt-get install  libossp-uuid-perl libjson-perl libhtml-template-perl \
         libmath-base36-perl libredis-perl libtext-multimarkdown-perl \
-        perl perl-modules libcgi-application-perl libcgi-session-perl
+        perl perl-modules libcgi-application-perl libcgi-session-perl \
+        libhtml-parser-perl
 
 
 Notes

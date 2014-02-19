@@ -1,16 +1,21 @@
 #
-# This is a trivial docker-file for the markdown-share application.
-# It is now how I run the real site, that runs under thttpd with
-# a custom proxy to handle the rewrites, but it does work.
+# This is a docker file for the markdown-share application.
 #
-# To build the image:
+# I do not run the real site under docker, instead that runs
+# under thttpd with a custom proxy to handle the rewrites.
+#
+# To build this image:
+#
 #     sudo docker build -t skxskx/markdown.share .
 #
 # Then to launch the image:
+#
 #     sudo docker run -d -p 3333:80 skxskx/markdown.share
 #
 # Once launched you should open your favourite browser and point
-# it at http://localhost:3333/
+# it at:
+#
+#      http://localhost:3333/
 #
 # Steve
 # --
@@ -39,14 +44,14 @@ RUN rm /etc/apache2/sites-enabled/000-default
 #
 #  Now install our Perl dependencies
 #
-RUN apt-get install --yes --force-yes libossp-uuid-perl libjson-perl libhtml-template-perl libmath-base36-perl libredis-perl libtext-multimarkdown-perl perl perl-modules libcgi-application-perl libcgi-session-perl
+RUN apt-get install --yes --force-yes libossp-uuid-perl libjson-perl libhtml-template-perl libmath-base36-perl libredis-perl libtext-multimarkdown-perl perl perl-modules libcgi-application-perl libcgi-session-perl libhtml-parser-perl
 
 #
 #  Install git and checkout our code
 #
 RUN apt-get install --yes --force-yes git
 
-RUN echo 2014-02-19
+RUN echo 2014-02-19r2
 RUN cd /srv && git clone https://github.com/skx/markdown.share.git
 
 
