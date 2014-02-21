@@ -7,20 +7,20 @@ use warnings;
 use Test::More qw! no_plan !;
 
 
-BEGIN {use_ok('HTML::Emojis');}
-require_ok('HTML::Emojis');
+BEGIN {use_ok('HTML::Emoji');}
+require_ok('HTML::Emoji');
 
 
 #
 #  Create a helper
 #
-my $helper = HTML::Emojis->new( path => "/images" );
+my $helper = HTML::Emoji->new( path => "/images" );
 
 #
 #  Ensure that worked and is the correct type
 #
 ok( $helper, "Loaded the helper." );
-isa_ok( $helper, "HTML::Emojis" );
+isa_ok( $helper, "HTML::Emoji" );
 
 
 #
