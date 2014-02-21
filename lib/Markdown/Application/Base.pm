@@ -1,13 +1,32 @@
-#!/usr/bin/perl -w
-#
-# Base-class for a site built with L<CGI::Application>.
-#
-# This base-class takes care of session setup/teardown, and
-# contains some utility methods for redirection, etc.
-#
-# Steve
-# --
-#
+
+=head1 NAME
+
+Markdown::Application::Base - A base class for CGI::Application apps.
+
+=head1 DESCRIPTION
+
+This class is a Base-class for a site built with L<CGI::Application>.
+
+This takes care of session setup/teardown, and
+contains some utility methods for redirection, etc.
+
+=cut
+
+=head1 AUTHOR
+
+Steve Kemp <steve@steve.org.uk>
+
+=cut
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014 Steve Kemp <steve@steve.org.uk>.
+
+This library is free software. You can modify and or distribute it under
+the same terms as Perl itself.
+
+=cut
+
 
 
 

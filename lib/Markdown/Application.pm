@@ -1,16 +1,38 @@
-#!/usr/bin/perl -w
-#
-# Simple Markdown-based pastebin service/site.
-#
-# Allows:
-#
-#   * Create.
-#   * Raw-view + Rendered-view.
-#   * Delete.
-#
-# Steve
-# --
-#
+# -*- cperl -*- #
+
+=head1 NAME
+
+Markdown::Application - A CGI::Application .. application
+
+=head1 DESCRIPTION
+
+This module implements is a web application, built using L<CGI::Application>,
+which allows the sharing and rendering of Markdown text.
+
+Remote users can upload Markdown text, and when they do so they will
+recieve a stable/static URL which can be shared.  That URL will allow
+later visitors to either view the rendered markdown, or the raw text.
+
+In addition to allowing user-uploads there are a small number of static
+endpoints defined which will show pre-cooked markdown text.
+
+=cut
+
+=head1 AUTHOR
+
+Steve Kemp <steve@steve.org.uk>
+
+=cut
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014 Steve Kemp <steve@steve.org.uk>.
+
+This library is free software. You can modify and or distribute it under
+the same terms as Perl itself.
+
+=cut
+
 
 
 
