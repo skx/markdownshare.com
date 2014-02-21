@@ -10,9 +10,9 @@ HTML::Emojis - A module for replacing emojis with image references.
 
     #!/usr/bin/perl -w
 
-    use HTML::Emojis;
+    use HTML::Emoji;
 
-    my $helper = HTML::Emojis->new( path => '/images/emojis' );
+    my $helper = HTML::Emoji->new( path => '/images/emojis' );
 
     $html = $helper->expand( $html );
 
@@ -62,7 +62,7 @@ the same terms as Perl itself.
 use strict;
 use warnings;
 
-package HTML::Emojis;
+package HTML::Emoji;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
