@@ -4,11 +4,13 @@ You have successfully remembered the [Konami Code](http://en.wikipedia.org/wiki/
 
 > ![Congratulations](/img/e.png "Congratulations")
 
-# Bonus Feature : Emojis
+# Bonus Feature : Emoji
 
-If you've found this page you should know that emojis are available in the markdown output.  Simply use `:name:` and this will be replaced with the appropriate image.
+If you've found this page you should know that the markdown formatter supports the use of emoji, simply use `:name:` and this will be replaced with the appropriate image.
 
-The name must be a valid emojis term, as unrecognized names will be rendered unchanged.  Valid names include the obvious:
+The name must be a valid emoji term, as unrecognized names will be rendered unchanged.
+
+Valid names include the obvious:
 
 | Emokis Name | Rendered Image |
 |:-----------:|:--------------:|
@@ -26,6 +28,7 @@ The name must be a valid emojis term, as unrecognized names will be rendered unc
 |`penguin`    | :penguin:      |
 |`smile`      | :smile:        |
 |`unknown`    | :unknown:      |
+|`invalid`    | :invalid:      |
 
 
 
