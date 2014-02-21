@@ -1092,4 +1092,22 @@ sub expand
 }
 
 
+
+=begin doc
+
+Return all known emoji terms, as a hash.
+
+=end doc
+
+=cut
+
+sub all
+{
+    my ($self) = (@_);
+
+    my @keys = keys %known;
+    return ( \@keys );
+}
+
+
 1;

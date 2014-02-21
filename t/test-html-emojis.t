@@ -28,26 +28,37 @@ isa_ok( $helper, "HTML::Emoji" );
 #
 foreach my $line (<DATA>)
 {
-    chomp( $line );
+    chomp($line);
 
     #
     #  The lines we'll have contain both the input and the expected
     # output
     #
-    if ( $line =~/^(.*)\|(.*)$/ )
+    if ( $line =~ /^(.*)\|(.*)$/ )
     {
         my $inp = $1;
         my $out = $2;
 
-        $inp = "\n" if ( $inp eq "\\n" ) ;
-        $out = "\n" if ( $out eq "\\n" ) ;
+        $inp = "\n" if ( $inp eq "\\n" );
+        $out = "\n" if ( $out eq "\\n" );
 
-        my $expanded = $helper->expand( $inp );
+        my $expanded = $helper->expand($inp);
 
         is( $out, $expanded, "We got the output we expected" );
     }
 
 }
+
+
+#
+#  Test we have known types
+#
+my $known = $helper->all();
+is( ref $known, "ARRAY", "Object is the correct type" );
+ok( scalar @$known > 100, "We have more than 100 known types." );
+is( scalar @$known, 864, "We have exactly the right number of types." );
+
+
 
 __DATA__
 # No emojis
