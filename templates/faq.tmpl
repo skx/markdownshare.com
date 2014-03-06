@@ -28,7 +28,9 @@
             </dd>
             <dt>How is this site built?</dt>
             <dd>
-              <p>The site is written with a small number of Perl libraries, and you can <a href="https://github.com/skx/markdown.share/">study the source code</a> if you wish.</p>
+              <p>The site is written via the Perl <a href="http://search.cpan.org/perldoc?CGI%3A%3AApplication">CGI::Application</a> framework, along with a small number of Perl libraries.</p>
+              <p>The content that users submit is stored in a small <a href="http://redis.io/">Redis</a> "database", and re-rendered on the fly when it is requested.  (We only store the markdown text which users submit, allowing any improvements to the renderer to be applied to all prior submissions.)</p>
+              <p>If you wish you can <a href="https://github.com/skx/markdown.share/">download or study the source code</a> behind this site.</p>
             </dd>
             <dt>Can I run my own install?</dt>
             <dd>
