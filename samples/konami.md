@@ -4,6 +4,8 @@ You have successfully remembered the [Konami Code](http://en.wikipedia.org/wiki/
 
 > ![Congratulations](/img/e.png "Congratulations")
 
+(Or you were given a link to this page :wink: - generally you'd get here by entering the code on any valid page on this site.)
+
 # Bonus Feature : Emoji
 
 If you've found this page you should know that the markdown formatter supports the use of emoji, simply use `:name:` and this will be replaced with the appropriate image.
@@ -34,11 +36,16 @@ Valid names include the obvious:
 
 ## About This Page
 
-This page is present to prove that I, [Steve Kemp](http://steve.org.uk/),
-developed, wrote, and deployed this project.
+This page is present to prove that [Steve Kemp](http://steve.org.uk/),
+developed, wrote, and deployed this website.
 
 Unfortunately some people will insist that their installations of my
 projects are official and _home-made_ despite that not being the case.
+
+This is the unspoken downside of open-source releases; people will rebrand
+your work, typically without understanding it or examining it in depth.
+Easter eggs like this are useful in that context.
+
 
 ## This Project
 
