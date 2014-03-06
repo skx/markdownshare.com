@@ -351,7 +351,8 @@ sub edit
             #
             $template->param( html    => $html,
                               id      => $id,
-                              content => $text );
+                              content => $text
+                            );
         }
     }
     elsif ( $submit && ( $submit =~ /save/i ) )
