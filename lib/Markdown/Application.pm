@@ -291,7 +291,8 @@ sub edit
     #
     # If there's a missing ID redirect.  If the ID is bogus abort.
     #
-    return ( $self->redirectURL("/") ) unless ($id);
+    #return ( $self->redirectURL("/") ) unless ($id);
+    die "Missing ID" unless( $id );
     die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
@@ -350,6 +351,7 @@ sub edit
             #  Populate both the text and the HTML
             #
             $template->param( html    => $html,
+                              id      => $id,
                               content => $text );
         }
     }
@@ -370,7 +372,8 @@ sub edit
     }
     else
     {
-        $template->param( content => $redis->get("MARKDOWN:$did:TEXT") );
+        $template->param( content => $redis->get("MARKDOWN:$did:TEXT"),
+                          id      => $id, );
     }
 
     return ( $template->output() );

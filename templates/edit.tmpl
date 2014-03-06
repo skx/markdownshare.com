@@ -21,13 +21,13 @@
     <!-- /tmpl_if -->
     <h1>Edit your Markdown</h1>
     <blockquote>
-      <form action="/edit" method="post" >
+      <form action="/" method="post" >
         <input type="hidden" name="id" value="<!-- tmpl_var name='id' -->" />
+        <input type="hidden" name="mode" value="edit" />
         <div class="ta">
           <textarea rows="40" cols="200" name="text"><!-- tmpl_var name="content" --></textarea>
         </div>
         <p>
-          <input type="hidden" name="mode" value="edit" />
           <input type="submit" name="submit" value="Preview" />
           <input type="submit" name="submit" value="Save" />
         </p>
