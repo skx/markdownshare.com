@@ -291,8 +291,7 @@ sub edit
     #
     # If there's a missing ID redirect.  If the ID is bogus abort.
     #
-    #return ( $self->redirectURL("/") ) unless ($id);
-    die "Missing ID" unless( $id );
+    return ( $self->redirectURL("/") ) unless ($id);
     die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
