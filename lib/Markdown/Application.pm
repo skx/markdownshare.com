@@ -412,6 +412,12 @@ sub view
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
     #
+    #  Increase the view-count
+    #
+    $redis->inc("MARKDOWN:$uid:VIEWED");
+
+
+    #
     # Load the template
     #
     my $template = $self->load_template("view.tmpl");
