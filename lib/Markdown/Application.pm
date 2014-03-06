@@ -83,6 +83,7 @@ sub setup
         # Real handlers.
         'create' => 'create',
         'delete' => 'delete',
+        'edit'   => 'edit',
         'raw'    => 'raw',
         'view'   => 'view',
 
@@ -263,6 +264,113 @@ sub create
         #  Redirect to view the new submission.
         #
         return ( $self->redirectURL( "/view/" . $id ) );
+    }
+
+    return ( $template->output() );
+}
+
+
+=begin doc
+
+Edit a prior submission, via a token.
+
+=end doc
+
+=cut
+
+sub edit
+{
+    my ($self) = (@_);
+
+    #
+    #  Get the ID
+    #
+    my $cgi = $self->query();
+    my $id  = $cgi->param("id");
+
+    #
+    # If there's a missing ID redirect.  If the ID is bogus abort.
+    #
+    return ( $self->redirectURL("/") ) unless ($id);
+    die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
+
+    #
+    #  Find the value, and see if it exists
+    #
+    my $redis = $self->{ 'redis' };
+    my $rid   = $redis->get("MARKDOWN:KEY:$id");
+
+    #
+    #  If the value is not present then abort
+    #
+    if ( ( !$rid ) ||
+         ( $rid !~ /^([-0-9a-z]+)$/i ) )
+    {
+        $self->header_props( -status => 404 );
+        return "Invalid auth-key!  (Has the post has been deleted?)";
+    }
+
+    #
+    ##
+    ##  Ok we can load the text and allow the preview-stuff to happen.
+    ##
+    #
+
+    #
+    # If we have a legacy ID then decode, otherwise use as-is.
+    #
+    my $did = $rid;
+    if ( length($did) < 3 )
+    {
+        $did = decode_base36($id);
+    }
+
+    #
+    #  Load the template
+    #
+    my $template = $self->load_template("edit.tmpl");
+
+    #
+    #  See if the user is submitting
+    #
+    my $submit = $cgi->param("submit");
+
+    if ( $submit && ( $submit =~ /preview/i ) )
+    {
+        my $text = $cgi->param("text");
+
+        #
+        #  Render the text
+        #
+        if ( length($text) )
+        {
+            my $html = render($text);
+
+            #
+            #  Populate both the text and the HTML
+            #
+            $template->param( html    => $html,
+                              content => $text );
+        }
+    }
+    elsif ( $submit && ( $submit =~ /save/i ) )
+    {
+
+        #
+        #  Get the text, and save it.
+        #
+        my $text = $cgi->param("text");
+        $redis->set( "MARKDOWN:$did:TEXT", $text );
+
+        #
+        #  Redirect to view it.
+        #
+        return ( $self->redirectURL( "/view/" . $rid ) );
+
+    }
+    else
+    {
+        $template->param( content => $redis->get("MARKDOWN:$did:TEXT") );
     }
 
     return ( $template->output() );

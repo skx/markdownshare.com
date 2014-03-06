@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="description" content="Quick and easy sharing of markdown text" />
+<meta name="keywords" content="markdown, pastebin, markdownsharing, sharing markdown" />
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<link rel="author" href="/humans.txt" />
+<title>MarkdownShare : Edit your markdown</title>
+</head>
+<body>
+<div id="wrap">
+<!-- tmpl_include name='header.inc' -->
+<div id="content">
+    <!-- tmpl_if name='html' -->
+    <h1>Your Markdown Preview</h1>
+    <blockquote>
+      <!-- tmpl_var name='html' -->
+    </blockquote>
+    <!-- /tmpl_if -->
+    <h1>Edit your Markdown</h1>
+    <blockquote>
+      <form action="/edit" method="post" >
+        <input type="hidden" name="id" value="<!-- tmpl_var name='id' -->" />
+        <div class="ta">
+          <textarea rows="40" cols="200" name="text"><!-- tmpl_var name="content" --></textarea>
+        </div>
+        <p>
+          <input type="hidden" name="mode" value="edit" />
+          <input type="submit" name="submit" value="Preview" />
+          <input type="submit" name="submit" value="Save" />
+        </p>
+      </form>
+    </blockquote>
+</div>
+<div class="clear"> </div>
+<!-- tmpl_include name='footer.inc' -->
+</div>
+<!-- tmpl_include name='k.inc' -->
+</body>
+</html>
