@@ -31,6 +31,7 @@ MAINTAINER steve@steve.org.uk
 #
 #  Ensure our packages are OK.
 #
+RUN echo 06-03-2014
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 
