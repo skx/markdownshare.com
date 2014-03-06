@@ -414,7 +414,7 @@ sub view
     #
     #  Increase the view-count
     #
-    $redis->inc("MARKDOWN:$uid:VIEWED");
+    $redis->incr("MARKDOWN:$uid:VIEWED");
 
 
     #
