@@ -18,6 +18,30 @@ endpoints defined which will show pre-cooked markdown text.
 
 =cut
 
+=head1 IMPLEMENTATION NOTES
+
+When a piece of text is uploaded then it is pushed into a redis database,
+and at the same time an authentication token is generated.
+
+The intention is that only the uploader knows the authentication token,
+and that token is required to edit/remove the text in the future.
+
+* When posts are created they are given UUIDs to avoid enumeration.
+    * This will allow http://host/view/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+* When a post is created it will have a token created allowing:
+    * http://host/edit/$token
+    * http://host/delete/$token
+
+The token is a one-to-one mapping, again stored in our redis store.  So
+given an ID ("xxxxxx-xxxx-...") and a TOKEN ( "1234" ) we merely run:
+
+    redis->set( "MARKDOWN:KEY:$TOKEN", $ID )
+
+This allows us to lookup the ID given the TOKEN, but not vice-versa, since
+that shouldn't be required.
+
+=cut
+
 =head1 AUTHOR
 
 Steve Kemp <steve@steve.org.uk>
@@ -164,9 +188,9 @@ sub create
                 my $id = $self->saveMarkdown($txt);
 
                 #
-                #  Get the deletion link.
+                #  Get the token for the deletion/edit link.
                 #
-                my $auth = $self->authLink($id);
+                my $auth = $self->gen_token($id);
 
                 #
                 # Build up something sensible to return to the caller
@@ -249,7 +273,7 @@ sub create
         #
         #  Create a deletion link.
         #
-        my $auth = $self->authLink($id);
+        my $auth = $self->gen_token($id);
 
         #
         #  Set the session-flash parameter with the secret ID.
@@ -630,7 +654,10 @@ sub raw
 
 =begin doc
 
-Render the text.
+Render the given markdown text, handling emoji expansion too.
+
+B<NOTE> All our code passes the markdown through this method to ensure that
+we only need to update the rendering process in one place.
 
 =end doc
 
@@ -657,7 +684,8 @@ sub render
 
 =begin doc
 
-Populate the given text in the next ID.
+Save the given text in our store, and return the globally unique
+identifier for it.
 
 =end doc
 
@@ -703,20 +731,23 @@ sub saveMarkdown
 
 =begin doc
 
-Create an auth-link for a given ID.
+Create an authentication token for a given ID.
+
+We could use a UUID here, but to give it a different feel I used a hash
+of the time, the remote IP, and some "randomness".  Hrm.
 
 =end doc
 
 =cut
 
-sub authLink
+sub gen_token
 {
     my ( $self, $id ) = (@_);
 
     my $cgi = $self->query();
 
     #
-    #  The deletion link is "hash( time, ip, id )";
+    #  The authentication token is "hash( time, ip, id )";
     #
     my $key = time . $cgi->remote_host() . $id;
 
