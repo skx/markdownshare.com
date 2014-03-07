@@ -188,7 +188,7 @@ sub create
                 my $id = $self->saveMarkdown($txt);
 
                 #
-                #  Get the token for the deletion/edit link.
+                #  Generate an authentication token for deletion/editting.
                 #
                 my $auth = $self->gen_token($id);
 
@@ -271,7 +271,7 @@ sub create
         my $id = $self->saveMarkdown($txt);
 
         #
-        #  Create a deletion link.
+        #  Generate an authentication token for deletion/editting.
         #
         my $auth = $self->gen_token($id);
 
@@ -296,7 +296,7 @@ sub create
 
 =begin doc
 
-Edit a prior submission, via a token.
+Edit a prior submission, via an authentication-token.
 
 =end doc
 
@@ -331,7 +331,7 @@ sub edit
          ( $rid !~ /^([-0-9a-z]+)$/i ) )
     {
         $self->header_props( -status => 404 );
-        return "Invalid auth-key!  (Has the post has been deleted?)";
+        return "Invalid auth-token!  (Has the post has been deleted?)";
     }
 
     #
@@ -406,7 +406,7 @@ sub edit
 
 =begin doc
 
-Delete a prior-upload by ID.
+Delete some text which has been uploaded, via the authentication-token.
 
 =end doc
 
@@ -469,7 +469,7 @@ sub delete
     else
     {
         $self->header_props( -status => 404 );
-        return "Invalid auth-key!  (Has the post already been deleted?)";
+        return "Invalid auth-token!  (Has the post been deleted?)";
     }
 }
 
