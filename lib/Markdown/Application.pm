@@ -190,7 +190,7 @@ sub create
                 #
                 #  Generate an authentication token for deletion/editting.
                 #
-                my $auth = $self->gen_token($id);
+                my $auth = $self->gen_auth_token($id);
 
                 #
                 # Build up something sensible to return to the caller
@@ -273,7 +273,7 @@ sub create
         #
         #  Generate an authentication token for deletion/editting.
         #
-        my $auth = $self->gen_token($id);
+        my $auth = $self->gen_auth_token($id);
 
         #
         #  Set the session-flash parameter with the secret ID.
@@ -319,20 +319,15 @@ sub edit
     die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
-    #  Find the value, and see if it exists
+    #  Find the key we'll be working with
     #
-    my $redis = $self->{ 'redis' };
-    my $rid   = $redis->get("MARKDOWN:KEY:$id");
-
-    #
-    #  If the value is not present then abort
-    #
-    if ( ( !$rid ) ||
-         ( $rid !~ /^([-0-9a-z]+)$/i ) )
+    my $real_id = $self->by_auth_token($id);
+    if ( !$real_id )
     {
         $self->header_props( -status => 404 );
         return "Invalid auth-token!  (Has the post has been deleted?)";
     }
+
 
     #
     ##
@@ -340,14 +335,6 @@ sub edit
     ##
     #
 
-    #
-    # If we have a legacy ID then decode, otherwise use as-is.
-    #
-    my $did = $rid;
-    if ( length($did) < 3 )
-    {
-        $did = decode_base36($id);
-    }
 
     #
     #  Load the template
@@ -385,19 +372,21 @@ sub edit
         #
         #  Get the text, and save it.
         #
-        my $text = $cgi->param("text");
-        $redis->set( "MARKDOWN:$did:TEXT", $text );
+        my $text = $cgi->param("text") || "";
+        my $redis = $self->{ 'redis' };
+        $redis->set( "MARKDOWN:$real_id:TEXT", $text );
 
         #
         #  Redirect to view it.
         #
-        return ( $self->redirectURL( "/view/" . $rid ) );
+        return ( $self->redirectURL( "/view/" . $real_id ) );
 
     }
     else
     {
-        $template->param( content => $redis->get("MARKDOWN:$did:TEXT"),
-                          id      => $id, );
+        my $redis = $self->{ 'redis' };
+        $template->param( content => $redis->get("MARKDOWN:$real_id:TEXT"),
+                          id      => $id );
     }
 
     return ( $template->output() );
@@ -429,48 +418,37 @@ sub delete
     die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
 
     #
-    #  Find the value, and see if it exists
+    #  Find the key we'll be working with
     #
-    my $redis = $self->{ 'redis' };
-    my $rid   = $redis->get("MARKDOWN:KEY:$id");
-
-    #
-    #  If the value is present
-    #
-    if ( $rid && ( $rid =~ /^([-0-9a-z]+)$/i ) )
-    {
-
-        #
-        # If we have a legacy ID then decode, otherwise use as-is.
-        #
-        my $did = $rid;
-        if ( length($did) < 3 )
-        {
-            $did = decode_base36($id);
-        }
-
-        #
-        #  Unset the text
-        #
-        $redis->set( "MARKDOWN:$did:TEXT", "" );
-
-        #
-        #  Remove the auth-key.
-        #
-        $redis->del("MARKDOWN:KEY:$id");
-
-        #
-        #  Remove this ID from the recent list of valid IDs, if present.
-        #
-        $redis->lrem( "MARKDOWN:RECENT", 1, $did );
-
-        return ( $self->redirectURL( "/view/" . $rid ) );
-    }
-    else
+    my $real_id = $self->by_auth_token($id);
+    if ( !$real_id )
     {
         $self->header_props( -status => 404 );
-        return "Invalid auth-token!  (Has the post been deleted?)";
+        return "Invalid auth-token!  (Has the post has been deleted?)";
     }
+
+    #
+    # Get the DB-handle.
+    #
+    my $redis = $self->{ 'redis' };
+
+    #
+    #  Unset the text, and the view-count.
+    #
+    $redis->del("MARKDOWN:$real_id:TEXT");
+    $redis->del("MARKDOWN:$real_id:VIEWED");
+
+    #
+    #  Remove the auth-token.
+    #
+    $redis->del("MARKDOWN:KEY:$real_id");
+
+    #
+    #  Remove this ID from the recent list of valid IDs, if present.
+    #
+    $redis->lrem( "MARKDOWN:RECENT", 1, $real_id );
+
+    return ( $self->redirectURL( "/view/" . $real_id ) );
 }
 
 
@@ -750,7 +728,7 @@ of the time, the remote IP, and some "randomness".  Hrm.
 
 =cut
 
-sub gen_token
+sub gen_auth_token
 {
     my ( $self, $id ) = (@_);
 
@@ -780,6 +758,41 @@ sub gen_token
     return ($digest);
 }
 
+
+=begin doc
+
+Given an authenticate token return the appropriate ID
+
+=end doc
+
+=cut
+
+sub by_auth_token
+{
+    my ( $self, $token ) = (@_);
+
+    #
+    #  Lookup the token
+    #
+    my $redis = $self->{ 'redis' };
+    my $id    = $redis->get("MARKDOWN:KEY:$token");
+
+    #
+    # If the value wasn't found then that's an error.
+    #
+    return if ( !$id );
+    return if ( $id !~ /^([-0-9a-z]+)$/i );
+
+    #
+    # If we have a legacy ID then decode, otherwise use as-is.
+    #
+    if ( length($id) < 3 )
+    {
+        $id = decode_base36($id);
+    }
+
+    return ($id);
+}
 
 
 
