@@ -108,8 +108,8 @@ sub setup
         'create' => 'create',
         'delete' => 'delete',
         'edit'   => 'edit',
-        'raw'    => 'raw',
-        'view'   => 'view',
+        'view'   => 'view_html',
+        'raw'    => 'view_raw',
 
         # called on unknown mode.
         'AUTOLOAD' => 'unknown_mode',
@@ -483,7 +483,7 @@ Show the contents of a paste.
 
 =cut
 
-sub view
+sub view_html
 {
     my ($self) = (@_);
 
@@ -599,7 +599,7 @@ Show the contents of a paste, as raw markdown.
 
 =cut
 
-sub raw
+sub view_raw
 {
     my ($self) = (@_);
 
@@ -649,6 +649,16 @@ sub raw
     }
 
 }
+
+
+
+
+#
+##
+##  Utility methods follow - rather than URL-handlers.
+##
+#
+
 
 
 
