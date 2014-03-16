@@ -128,7 +128,7 @@ sub setup
 
 =begin doc
 
-Show a static page.
+Show a static page, loaded from beneath ./templates
 
 =end doc
 
@@ -241,7 +241,7 @@ sub create
     my $template = $self->load_template("create.tmpl");
 
     #
-    #
+    #  See what action the user is performing: preview vs. submit.
     #
     if ( $sub && ( $sub =~ /preview/i ) )
     {
@@ -448,6 +448,9 @@ sub delete
     #
     $redis->lrem( "MARKDOWN:RECENT", 1, $real_id );
 
+    #
+    # Redirect specifically so the user can see their post is gone.
+    #
     return ( $self->redirectURL( "/view/" . $real_id ) );
 }
 
