@@ -183,14 +183,9 @@ sub create
             {
 
                 #
-                #  Save it.
+                #  Save it, which will return an ID and auth-token.
                 #
-                my $id = $self->saveMarkdown($txt);
-
-                #
-                #  Generate an authentication token for deletion/editting.
-                #
-                my $auth = $self->gen_auth_token($id);
+                my $data = $self->saveMarkdown($txt);
 
                 #
                 # Build up something sensible to return to the caller
@@ -205,10 +200,16 @@ sub create
                 my $base = $cgi->url( -base => 1 );
 
                 my %hash;
-                $hash{ "id" }     = $id;
-                $hash{ "link" }   = $base . "/view/" . $id;
-                $hash{ "raw" }    = $base . "/raw/" . $id;
-                $hash{ "delete" } = $base . "/delete/" . $auth;
+                $hash{ "id" }   = $data->{ 'id' };
+                $hash{ "auth" } = $data->{ 'auth' };
+
+                # view by id
+                $hash{ "link" } = $base . "/view/" . $data->{ 'id' };
+                $hash{ "raw" }  = $base . "/raw/" . $data->{ 'id' };
+
+                # update via auth-token
+                $hash{ "delete" } = $base . "/delete/" . $data->{ 'auth' };
+                $hash{ "edit" }   = $base . "/edit/" . $data->{ 'auth' };
 
                 #
                 #  Return the JSON object.
@@ -268,12 +269,7 @@ sub create
         #
         #  Get the ID of the newly submitted entry.
         #
-        my $id = $self->saveMarkdown($txt);
-
-        #
-        #  Generate an authentication token for deletion/editting.
-        #
-        my $auth = $self->gen_auth_token($id);
+        my $data = $self->saveMarkdown($txt);
 
         #
         #  Set the session-flash parameter with the secret ID.
@@ -281,13 +277,13 @@ sub create
         my $session = $self->param('session');
         if ($session)
         {
-            $session->param( "flash", $auth );
+            $session->param( "flash", $data->{ 'auth' } );
         }
 
         #
         #  Redirect to view the new submission.
         #
-        return ( $self->redirectURL( "/view/" . $id ) );
+        return ( $self->redirectURL( "/view/" . $data->{ 'id' } ) );
     }
 
     return ( $template->output() );
@@ -428,25 +424,9 @@ sub delete
     }
 
     #
-    # Get the DB-handle.
+    #  Delete the text and the auth-key
     #
-    my $redis = $self->{ 'redis' };
-
-    #
-    #  Unset the text, and the view-count.
-    #
-    $redis->del("MARKDOWN:$real_id:TEXT");
-    $redis->del("MARKDOWN:$real_id:VIEWED");
-
-    #
-    #  Remove the auth-token.
-    #
-    $redis->del("MARKDOWN:KEY:$real_id");
-
-    #
-    #  Remove this ID from the recent list of valid IDs, if present.
-    #
-    $redis->lrem( "MARKDOWN:RECENT", 1, $real_id );
+    $self->deleteMarkdown( $id, $real_id );
 
     #
     # Redirect specifically so the user can see their post is gone.
@@ -675,8 +655,8 @@ sub render
 
 =begin doc
 
-Save the given text in our store, and return the globally unique
-identifier for it.
+Save the given text in our store and return the ID _and_ auth-token
+which will be used to edit/delete it.
 
 =end doc
 
@@ -716,7 +696,16 @@ sub saveMarkdown
     $redis->rpush( "MARKDOWN:RECENT", $id );
     $redis->ltrim( "MARKDOWN:RECENT", 0, 99 );
 
-    return ($id);
+    #
+    #  The return value of this method will be a hash
+    # containing the ID of the post, and the authentication token.
+    #
+    my $result = {};
+
+    $result->{ 'id' }   = $id;
+    $result->{ 'auth' } = $self->gen_auth_token($id);
+
+    return ($result);
 }
 
 
@@ -797,6 +786,42 @@ sub by_auth_token
     return ($id);
 }
 
+
+=begin doc
+
+Remove the text from the store, along with the authentication token.
+
+=end doc
+
+
+=cut
+
+sub deleteMarkdown
+{
+    my ( $self, $id, $auth ) = (@_);
+
+    #
+    # Get the DB-handle.
+    #
+    my $redis = $self->{ 'redis' };
+
+    #
+    #  Unset the text, and the view-count.
+    #
+    $redis->del("MARKDOWN:$id:TEXT");
+    $redis->del("MARKDOWN:$id:VIEWED");
+
+    #
+    #  Remove the auth-token.
+    #
+    $redis->del("MARKDOWN:KEY:$auth");
+
+    #
+    #  Remove this ID from the recent list of valid IDs, if present.
+    #
+    $redis->lrem( "MARKDOWN:RECENT", 1, $id );
+
+}
 
 
 1;
