@@ -404,20 +404,20 @@ sub delete
     #
     #  Get the ID
     #
-    my $cgi = $self->query();
-    my $id  = $cgi->param("id");
+    my $cgi  = $self->query();
+    my $auth = $cgi->param("id");
 
     #
     # If there's a missing ID redirect.  If the ID is bogus abort.
     #
-    return ( $self->redirectURL("/") ) unless ($id);
-    die "Invalid ID" unless ( $id =~ /^([-a-z0-9]+)$/i );
+    return ( $self->redirectURL("/") ) unless ($auth);
+    die "Invalid auth token" unless ( $auth =~ /^([-a-z0-9]+)$/i );
 
     #
     #  Find the key we'll be working with
     #
-    my $real_id = $self->by_auth_token($id);
-    if ( !$real_id )
+    my $id = $self->by_auth_token($auth);
+    if ( !$id )
     {
         $self->header_props( -status => 404 );
         return "Invalid auth-token!  (Has the post has been deleted?)";
@@ -426,12 +426,12 @@ sub delete
     #
     #  Delete the text and the auth-key
     #
-    $self->deleteMarkdown( $id, $real_id );
+    $self->deleteMarkdown( $id, $auth );
 
     #
     # Redirect specifically so the user can see their post is gone.
     #
-    return ( $self->redirectURL( "/view/" . $real_id ) );
+    return ( $self->redirectURL( "/view/" . $id ) );
 }
 
 
