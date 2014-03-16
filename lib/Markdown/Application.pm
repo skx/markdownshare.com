@@ -507,11 +507,6 @@ sub view_html
     my $redis = $self->{ 'redis' };
     my $text  = $redis->get("MARKDOWN:$uid:TEXT");
 
-    #
-    #  Increase the view-count
-    #
-    $redis->incr("MARKDOWN:$uid:VIEWED");
-
 
     #
     # Load the template
@@ -525,6 +520,11 @@ sub view_html
     {
         $text = render($text);
         $template->param( html => $text );
+
+        #
+        #  Increase the view-count
+        #
+        $redis->incr("MARKDOWN:$uid:VIEWED");
     }
     else
     {
