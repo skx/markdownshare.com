@@ -77,6 +77,7 @@ use Data::UUID;
 use Digest::MD5 qw(md5_hex);
 use JSON;
 use HTML::Emoji;
+use HTML::Scrubber;
 use HTML::Template;
 use Math::Base36 ':all';
 use Text::MultiMarkdown 'markdown';
@@ -648,7 +649,81 @@ sub render
     #
     my $helper = HTML::Emoji->new( path => "/img/emojis" );
 
-    return ( $helper->expand($html) );
+    $html = $helper->expand($html);
+
+
+    my @allow = qw[cut blockquote];
+    my @deny =
+      qw[script center embed object form input marquee menu meta option font div];
+    my @rules = (
+        img => {src   => qr{^(http://)}i,    # only absolute image links allowed
+                alt   => 1,                  # alt attribute allowed
+                align => 1,                  # align attribute allowed
+                '*'   => 0,                  # deny all other attributes
+               },
+        a => { href  => 1,                  # HREF
+               name  => 1,                  # name attribute allowed
+               id    => 1,                  # id attribute allowed
+               title => 1,                  # title attribute allowed
+               rel   => qr/^nofollow$/i,    # Link relationship
+               '*'   => 0,                  # deny all other attributes
+             },
+        pre => { class => 1,
+                 style => 0,
+               },
+        span => { class => 1,
+                  style => 0,
+                },
+    );
+
+    my @default = (
+        1 =>                             # default rule, allow all tags
+          { '*' => 1,                    # default rule, allow all attributes
+            'href'     => qr{^(?!(?:java)?script)}i,
+            'src'      => qr{^(?!(?:java)?script)}i,
+            'cite'     => '(?i-xsm:^(?!(?:java)?script))',
+            'language' => 0,
+            'name'        => 1,          # could be sneaky, but hey ;)
+            'onblur'      => 0,
+            'color'       => 0,
+            'class'       => 0,
+            'style'       => 0,
+            'onchange'    => 0,
+            'onclick'     => 0,
+            'ondblclick'  => 0,
+            'onerror'     => 0,
+            'onfocus'     => 0,
+            'onkeydown'   => 0,
+            'onkeypress'  => 0,
+            'onkeyup'     => 0,
+            'onload'      => 0,
+            'onmousedown' => 0,
+            'onmousemove' => 0,
+            'onmouseout'  => 0,
+            'onmouseover' => 0,
+            'onmouseup'   => 0,
+            'onreset'     => 0,
+            'onselect'    => 0,
+            'onsubmit'    => 0,
+            'onunload'    => 0,
+            'type'        => 0,
+            'font'        => 0,
+          } );
+
+
+    #
+    #  Create the scrubber.
+    #
+    my $safe = HTML::Scrubber->new();
+    $safe->allow(@allow);
+    $safe->rules(@rules);
+    $safe->deny(@deny);
+    $safe->default(@default);
+
+    # deny HTML Comments
+    $safe->comment(0);
+
+    return ( $safe->scrub($html) );
 
 }
 
