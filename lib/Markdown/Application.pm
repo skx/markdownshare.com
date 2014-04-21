@@ -656,9 +656,11 @@ sub render
     my @deny =
       qw[script center embed object form input marquee menu meta option font div];
     my @rules = (
-        img => {src   => qr{^(http://)}i,    # only absolute image links allowed
+        img => {src   => qr{^(http://|\/)}i,    # only absolute image links allowed
                 alt   => 1,                  # alt attribute allowed
                 align => 1,                  # align attribute allowed
+                height => 1,
+                width => 1,
                 '*'   => 0,                  # deny all other attributes
                },
         a => { href  => 1,                  # HREF
