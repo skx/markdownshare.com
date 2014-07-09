@@ -721,6 +721,7 @@ sub render
     $safe->rules(@rules);
     $safe->deny(@deny);
     $safe->default(@default);
+    $safe->style(1);
 
     # deny HTML Comments
     $safe->comment(0);
