@@ -652,7 +652,7 @@ sub render
     $html = $helper->expand($html);
 
 
-    my @allow = qw[cut blockquote];
+    my @allow = qw[blockquote style];
     my @deny =
       qw[script center embed object form input marquee menu meta option font div];
     my @rules = (
