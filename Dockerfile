@@ -60,6 +60,7 @@ RUN cd /srv && git clone https://github.com/skx/markdown.share.git
 # At this point we have all the daemons, now we'll configure Apache:
 #
 RUN a2enmod rewrite
+RUN a2enmod cgi
 ADD ./docker/docker.conf /etc/apache2/sites-enabled/markdown-share.conf
 
 
