@@ -40,7 +40,7 @@ RUN apt-get update
 #
 RUN apt-get install --yes --force-yes redis-server
 RUN apt-get install --yes --force-yes apache2
-RUN rm /etc/apache2/sites-enabled/000-default
+RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 #
 #  Now install our Perl dependencies
