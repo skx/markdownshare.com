@@ -31,13 +31,21 @@ MAINTAINER steve@steve.org.uk
 #
 #  Ensure our packages are OK.
 #
-RUN echo 06-03-2014
+RUN echo 28-02-2015
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 
 #
+# Prepare for server-installation - See:
+#    http://stackoverflow.com/questions/25193161/chfn-pam-system-error-interm
+#
+RUN ln -s -f /bin/true /usr/bin/chfn
+
+
+#
 #  Now install our servers
 #
+
 RUN apt-get install --yes --force-yes redis-server
 RUN apt-get install --yes --force-yes apache2
 RUN rm /etc/apache2/sites-enabled/000-default.conf
