@@ -40,7 +40,7 @@ RUN apt-get update
 #
 RUN apt-get install --yes --force-yes redis-server
 RUN apt-get install --yes --force-yes apache2
-RUN rm /etc/apache2/sites-enabled/000-default
+RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 #
 #  Now install our Perl dependencies
@@ -60,6 +60,7 @@ RUN cd /srv && git clone https://github.com/skx/markdown.share.git
 # At this point we have all the daemons, now we'll configure Apache:
 #
 RUN a2enmod rewrite
+RUN a2enmod cgi
 ADD ./docker/docker.conf /etc/apache2/sites-enabled/markdown-share.conf
 
 
