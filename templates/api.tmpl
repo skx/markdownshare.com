@@ -25,6 +25,13 @@ $ curl -H "Accept: application/json" -X POST --data "text=text+goes+here" <!-- t
 <pre>
 $ curl -H "Accept: application/json" -X POST -F "text=&lt;/path/to/text.md" <!-- tmpl_var name='domain' -->/create/
 </pre>
+<p>If you wish to allow a post to expire then add an <tt>expire=</tt> parameter too:</p>
+<table>
+<tr><th>Parameter</th><th>Meaning</th></tr>
+<tr><td>expire=N</td><td>Expire in N seconds.</td></tr>
+<tr><td>expire=Nh</td><td>Expire in N hours.</td></tr>
+<tr><td>expire=Nd</td><td>Expire in N days.</td></tr>
+</table>
       </blockquote>
       <h2>Console Clients</h2>
       <blockquote>
