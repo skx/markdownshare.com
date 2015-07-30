@@ -606,11 +606,11 @@ sub view_html
 
     if ( $html )
     {
-        return ( $template->output() );
+        return( $text );
     }
     else
     {
-        return( $text );
+        return ( $template->output() );
     }
 }
 
