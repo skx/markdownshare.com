@@ -606,7 +606,21 @@ sub view_html
 
     if ( $html )
     {
-        return( $text );
+        my $out = <<EOF;
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="author" href="/humans.txt" />
+<title>$id</title>
+</head>
+<body>
+$text
+</body>
+</html>
+EOF
+        return( $out );
     }
     else
     {
