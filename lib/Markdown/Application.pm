@@ -533,6 +533,12 @@ sub view_html
     my $cgi = $self->query();
     my $id  = $cgi->param("id");
 
+
+    #
+    #  HTML raw?  Or wrapped?
+    #
+    my $html = $cgi->param("html") || 0;
+
     #
     # If there's a missing ID redirect.  If the ID is bogus abort.
     #
@@ -597,7 +603,15 @@ sub view_html
     #
     $template->param( id => $id );
     $template->param( flash => $flash ) if ($flash);
-    return ( $template->output() );
+
+    if ( $html )
+    {
+        return ( $template->output() );
+    }
+    else
+    {
+        return( $text );
+    }
 }
 
 
