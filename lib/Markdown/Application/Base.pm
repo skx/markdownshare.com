@@ -137,7 +137,7 @@ sub teardown
     #
     #  Disconnect.
     #
-    my $redis = $self->{ 'redis' };
+    my $redis = $self->{ 'ss' };
     $redis->quit() if ($redis);
 }
 
