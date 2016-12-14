@@ -228,12 +228,12 @@ sub create
                     my $id   = $data->{ 'id' };
                     my $auth = $data->{ 'auth' };
 
-                    if ( $seconds > 0 )
-                    {
-                        my $redis = $self->{ 'redis' };
-                        $redis->expire( "MARKDOWN:$id:TEXT",  $seconds );
-                        $redis->expire( "MARKDOWN:KEY:$auth", $seconds );
-                    }
+#                    if ( $seconds > 0 )
+#                    {
+#                        my $redis = $self->{ 'redis' };
+#                        $redis->expire( "MARKDOWN:$id:TEXT",  $seconds );
+#                        $redis->expire( "MARKDOWN:KEY:$auth", $seconds );
+#                    }
                 }
 
 
