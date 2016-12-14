@@ -49,6 +49,7 @@ use base 'CGI::Application';
 #
 use CGI::Session;
 use Redis;
+use Redis::SQLite;
 
 
 
@@ -67,9 +68,14 @@ sub cgiapp_init
     my $query = $self->query();
 
     #
-    # Open our redis connection.
+    # Redis-handle for session storage
     #
-    $self->{ 'redis' } = Redis->new();
+    $self->{ 'ss' } = Redis->new();
+
+    #
+    # "Redis" access to our markdown-data.
+    #
+    $self->{ 'redis' } = Redis::SQLite->new();
 
     my $cookie_name   = 'CGISESSID';
     my $cookie_expiry = '+7d';
@@ -78,7 +84,7 @@ sub cgiapp_init
     # session setup
     my $session = CGI::Session->new( "driver:redis",
                                      $sid,
-                                     {  Redis  => $self->{ 'redis' },
+                                     {  Redis  => $self->{ 'ss' },
                                         Expire => 60 * 60 * 24
                                      } );
 
@@ -300,5 +306,3 @@ sub unknown_mode
 
 
 1;
-
-
