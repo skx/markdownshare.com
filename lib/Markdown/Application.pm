@@ -166,7 +166,6 @@ sub create
     my $sub = $cgi->param("submit");
     my $txt = $cgi->param("text") || "";
 
-
     #
     #  See if the caller accepts "application/json", and handle
     # that first - this is suboptimal and should be merged in better
@@ -823,6 +822,12 @@ sub saveMarkdown
     my ( $self, $txt ) = (@_);
 
     #
+    # Get the IP address of the submitter.
+    #
+    my $cgi = $self->query();
+    my $ip  = cgi->remote_host();
+
+    #
     #  Create the ID, which will hopefully avoid collisions.
     #
     my $helper = Data::UUID->new();
@@ -842,9 +847,10 @@ sub saveMarkdown
     }
 
     #
-    #  Set the text
+    #  Set the text & record the IP address.
     #
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
+    $redis->set( "MARKDOWN:$id:IP", $ip );
 
     #
     #  The return value of this method will be a hash
