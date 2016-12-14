@@ -66,7 +66,7 @@ sub get
           $self->{ 'db' }->prepare("SELECT val FROM string WHERE key=?");
     }
     $self->{ 'get' }->execute($key);
-    my $x = $self->{ 'get' }->fetchrow_array() || "";
+    my $x = $self->{ 'get' }->fetchrow_array() || undef;
     $self->{ 'get' }->finish();
     return ($x);
 }
