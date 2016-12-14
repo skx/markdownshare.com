@@ -825,7 +825,7 @@ sub saveMarkdown
     # Get the IP address of the submitter.
     #
     my $cgi = $self->query();
-    my $ip  = cgi->remote_host();
+    my $ip  = $cgi->remote_host();
 
     #
     #  Create the ID, which will hopefully avoid collisions.
