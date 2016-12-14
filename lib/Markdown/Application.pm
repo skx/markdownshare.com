@@ -847,12 +847,6 @@ sub saveMarkdown
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
 
     #
-    #  Store the most recently used IDs.
-    #
-    $redis->rpush( "MARKDOWN:RECENT", $id );
-    $redis->ltrim( "MARKDOWN:RECENT", 0, 99 );
-
-    #
     #  The return value of this method will be a hash
     # containing the ID of the post, and the authentication token.
     #
@@ -972,14 +966,7 @@ sub deleteMarkdown
     #
     $redis->del("MARKDOWN:KEY:$auth");
 
-    #
-    #  Remove this ID from the recent list of valid IDs, if present.
-    #
-    $redis->lrem( "MARKDOWN:RECENT", 1, $id );
-
 }
 
 
 1;
-
-
