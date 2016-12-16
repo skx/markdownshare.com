@@ -965,6 +965,7 @@ sub deleteMarkdown
     #  Unset the text, and the view-count.
     #
     $redis->del("MARKDOWN:$id:TEXT");
+    $redis->del("MARKDOWN:$id:IP");
     $redis->del("MARKDOWN:$id:VIEWED");
 
     #
