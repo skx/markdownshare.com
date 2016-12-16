@@ -1,0 +1,100 @@
+#!/usr/bin/perl -Ilib/
+
+=head1 NAME
+
+remove - Remove a series of pastes.
+
+=cut
+
+=head1 SYNOPSIS
+
+  remove UUID_1 .. UUID_2 .. UUID_3 .. UUID_N
+
+  Options:
+
+     None.
+
+=cut
+
+=head1 ABOUT
+
+This script allows a site-owner to remove a series of posts, if
+required.  This is largely a tool to prevent spammers from taking
+over your installation.
+
+=cut
+
+=head1 LICENSE
+
+Copyright (c) 2016 by Steve Kemp.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the terms of either:
+
+a) the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version,
+or
+
+b) the Perl "Artistic License".
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+use strict;
+use warnings;
+
+
+#
+# Add ~/current/lib to the load-path, if this directory exists.
+#
+# This is just a cheat for Steve, but should be harmless.
+#
+BEGIN {
+    push ( @INC, $ENV{'HOME'} . "/current/lib" )
+      if ( -d $ENV{'HOME'} . "/current/lib" );
+}
+
+
+#
+# Load our library interface
+#
+use Redis::SQLite;
+
+my $redis = Redis::SQLite->new();
+
+while ( my $id = shift(@ARGV) )
+{
+    remove_markdown($id);
+}
+exit(0);
+
+
+sub remove_markdown
+{
+    my ($id) = (@_);
+
+    #
+    #  Unset the text, and the view-count.
+    #
+    $redis->del("MARKDOWN:$id:TEXT");
+    $redis->del("MARKDOWN:$id:IP");
+    $redis->del("MARKDOWN:$id:VIEWED");
+
+    #
+    #  We should also remove the auth-token.
+    #
+    my $auth = $redis->get("MARKDOWN:$id:AUTH");
+    if ($auth)
+    {
+        $redis->del("MARKDOWN:$id:AUTH");
+        $redis->del("MARKDOWN:KEY:$auth");
+    }
+
+}
