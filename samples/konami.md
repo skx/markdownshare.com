@@ -29,14 +29,12 @@ Valid names include the obvious:
 |`older_woman`| :older_woman:  |
 |`penguin`    | :penguin:      |
 |`smile`      | :smile:        |
-|`unknown`    | :unknown:      |
-|`invalid`    | :invalid:      |
 
 
 
 ## About This Page
 
-This page is present to prove that [Steve Kemp](http://steve.org.uk/),
+This page is present to prove that [Steve Kemp](https://steve.kemp.fi/),
 developed, wrote, and deployed this website.
 
 Unfortunately some people will insist that their installations of my
