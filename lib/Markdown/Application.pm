@@ -903,6 +903,7 @@ sub gen_auth_token
     #
     my $redis = $self->{ 'redis' };
     $redis->set( "MARKDOWN:KEY:$digest", $id );
+    $redis->set( "MARKDOWN:$id:AUTH", $digest );
     return ($digest);
 }
 
