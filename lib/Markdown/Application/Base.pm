@@ -170,6 +170,20 @@ sub cgiapp_prerun
 }
 
 
+=begin doc
+
+Called after our application is done, and rewrites the output to
+decode the UTF-8 output.
+
+=end doc
+
+=cut
+
+sub cgiapp_postrun
+{
+    my ( $self, $output_ref ) = @_;
+    utf8::decode($$output_ref);
+}
 
 
 =begin doc
