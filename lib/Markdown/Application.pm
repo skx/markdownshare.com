@@ -227,12 +227,12 @@ sub create
                     my $id   = $data->{ 'id' };
                     my $auth = $data->{ 'auth' };
 
-#                    if ( $seconds > 0 )
-#                    {
-#                        my $redis = $self->{ 'redis' };
-#                        $redis->expire( "MARKDOWN:$id:TEXT",  $seconds );
-#                        $redis->expire( "MARKDOWN:KEY:$auth", $seconds );
-#                    }
+                    #                    if ( $seconds > 0 )
+                    #                    {
+                    #                        my $redis = $self->{ 'redis' };
+                    #                        $redis->expire( "MARKDOWN:$id:TEXT",  $seconds );
+                    #                        $redis->expire( "MARKDOWN:KEY:$auth", $seconds );
+                    #                    }
                 }
 
 
@@ -603,7 +603,7 @@ sub view_html
     $template->param( id => $id );
     $template->param( flash => $flash ) if ($flash);
 
-    if ( $html )
+    if ($html)
     {
         my $out = <<EOF;
 <?xml version="1.0" encoding="UTF-8"?>
@@ -619,7 +619,7 @@ $text
 </body>
 </html>
 EOF
-        return( $out );
+        return ($out);
     }
     else
     {
@@ -850,7 +850,7 @@ sub saveMarkdown
     #  Set the text & record the IP address.
     #
     $redis->set( "MARKDOWN:$id:TEXT", $txt );
-    $redis->set( "MARKDOWN:$id:IP", $ip );
+    $redis->set( "MARKDOWN:$id:IP",   $ip );
 
     #
     #  The return value of this method will be a hash
@@ -903,7 +903,7 @@ sub gen_auth_token
     #
     my $redis = $self->{ 'redis' };
     $redis->set( "MARKDOWN:KEY:$digest", $id );
-    $redis->set( "MARKDOWN:$id:AUTH", $digest );
+    $redis->set( "MARKDOWN:$id:AUTH",    $digest );
     return ($digest);
 }
 
