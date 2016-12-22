@@ -2,13 +2,13 @@
 
 =head1 NAME
 
-remove - Remove a series of pastes.
+dump - Show recent pastes.
 
 =cut
 
 =head1 SYNOPSIS
 
-  remove UUID_1 .. UUID_2 .. UUID_3 .. UUID_N
+  dump
 
   Options:
 
@@ -18,10 +18,7 @@ remove - Remove a series of pastes.
 
 =head1 ABOUT
 
-This script allows a site-owner to remove a series of posts, if
-required.  This is largely a tool to prevent spammers from taking
-over your installation.
-
+This shows recent pastes.
 =cut
 
 =head1 LICENSE
@@ -68,34 +65,22 @@ BEGIN
 #
 use Redis::SQLite;
 
+#
+# Open a handle.
+#
 my $redis = Redis::SQLite->new();
 
-while ( my $id = shift(@ARGV) )
+#
+# Process each key
+#
+foreach my $key ( $redis->keys("MARKDOWN:.*:IP") )
 {
-    remove_markdown($id);
+    my $ip = $redis->get($key);
+
+    $key =~ s/^MARKDOWN://g;
+    $key =~ s/:IP$//;
+
+    print "https://markdownshare.com/view/$key    - $ip\n";
 }
+
 exit(0);
-
-
-sub remove_markdown
-{
-    my ($id) = (@_);
-
-    #
-    #  Unset the text, and the view-count.
-    #
-    $redis->del("MARKDOWN:$id:TEXT");
-    $redis->del("MARKDOWN:$id:IP");
-    $redis->del("MARKDOWN:$id:VIEWED");
-
-    #
-    #  We should also remove the auth-token.
-    #
-    my $auth = $redis->get("MARKDOWN:$id:AUTH");
-    if ($auth)
-    {
-        $redis->del("MARKDOWN:$id:AUTH");
-        $redis->del("MARKDOWN:KEY:$auth");
-    }
-
-}
