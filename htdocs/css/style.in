@@ -158,3 +158,9 @@ textarea {
 dt {
    font-weight: bold;
 }
+
+/* See https://github.com/skx/markdownshare.com/issues/6 */
+code{
+    white-space:pre-wrap;
+    word-wrap:break-word;
+}
