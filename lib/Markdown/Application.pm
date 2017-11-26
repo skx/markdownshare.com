@@ -120,6 +120,7 @@ sub setup
     #  Start mode + mode name
     #
     $self->header_add( -charset => 'utf-8' );
+    $self->header_add( "Content-Security-Policy" => "script-src 'self'" );
     $self->start_mode('index');
     $self->mode_param('mode');
 }
