@@ -189,55 +189,6 @@ sub create
                 my $data = $self->saveMarkdown($txt);
 
                 #
-                #  Here we can configure the text to expire
-                # based on the expire=XX setting.
-                #
-                my $expire = $cgi->param("expire") || undef;
-                if ($expire)
-                {
-
-                    #
-                    #  Each text-submission results in two keys
-                    # being used:
-                    #
-                    #  1.  for authentication.
-                    #
-                    #  2.  for holding the text.
-                    #
-                    my $seconds = 0;
-                    if ( $expire =~ /^([0-9]+)$/ )
-                    {
-                        $seconds = $1;
-                    }
-                    if ( $expire =~ /^([0-9]+)m$/i )
-                    {
-                        $seconds = $1 * 60;
-                    }
-                    if ( $expire =~ /^([0-9]+)h$/i )
-                    {
-                        $seconds = $1 * 60 * 60;
-                    }
-                    if ( $expire =~ /^([0-9]+)d$/i )
-                    {
-                        $seconds = $1 * 60 * 60 * 24;
-                    }
-
-                    #
-                    #  OK update the keys.
-                    #
-                    my $id   = $data->{ 'id' };
-                    my $auth = $data->{ 'auth' };
-
-                    #                    if ( $seconds > 0 )
-                    #                    {
-                    #                        my $redis = $self->{ 'redis' };
-                    #                        $redis->expire( "MARKDOWN:$id:TEXT",  $seconds );
-                    #                        $redis->expire( "MARKDOWN:KEY:$auth", $seconds );
-                    #                    }
-                }
-
-
-                #
                 # Build up something sensible to return to the caller
                 #
                 # At the least they need to know:
