@@ -1,4 +1,10 @@
 
+**NOTE**: This project has been replaced by a golang port:
+
+* https://github.com/skx/markdownshare
+
+
+
 markdown.share
 --------------
 
